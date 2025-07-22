@@ -7,7 +7,7 @@ const Navbar = () => {
       
       {/* Left: Logo + Title */}
       <div className="flex items-center space-x-4 h-4">
-        <img src="../../../public/Atharva-logo.svg" alt="Atharva Logo" className="h-8 w-auto" />
+        <img src="/Atharva-logo.svg" alt="Atharva Logo" className="h-8 w-auto" />
         <h1 className="font-semibold text-lg">Atharva University</h1>
       </div>
 
