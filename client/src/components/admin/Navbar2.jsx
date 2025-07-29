@@ -8,6 +8,7 @@ const Navbar2 = () => {
         <button className="flex items-center space-x-2  text-black hover:text-blue-500 cursor-poinnter font-medium">
           <img src="/home_icon.svg" alt="home_icon" className="h-6 w-6" />
           <span>Home</span>
+          
         </button>
 
         {/* Employees */}
@@ -38,4 +39,4 @@ const Navbar2 = () => {
   );
 };
 
-export default Navbar2;
+export default Navbar2
