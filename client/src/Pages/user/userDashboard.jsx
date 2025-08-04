@@ -1,11 +1,11 @@
 import React from 'react'
-
-const userDashboard = () => {
-  return (
-    <div>
-      
-    </div>
-  )
+import UserPreviousAtten from '../../components/user/UserPreviousAtten'
+const UserDashboard = () => {
+    return (
+        <div>
+            <UserPreviousAtten/>
+        </div>
+    )
 }
 
-export default userDashboard
+export default UserDashboard
