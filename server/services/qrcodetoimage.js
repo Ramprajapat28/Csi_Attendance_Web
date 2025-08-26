@@ -1,1 +1,0 @@
-//convert qrcode string to image

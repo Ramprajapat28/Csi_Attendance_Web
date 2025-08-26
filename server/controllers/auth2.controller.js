@@ -203,6 +203,26 @@ const updateProfile = async (req, res) => {
     }
 };
 
+const viewProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).populate("organizationId", "name").select("-password");
+    if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  const response = {
+    ...user.toObject(),
+    organization: user.organizationId || null,
+  };
+
+  res.json(response);
+ }
+ catch (error) {
+    console.error("View profile error:", error);
+    res.status(500).json({ message: "Failed to retrieve user profile" });
+  }
+}
+
 const logout = (req, res) => {
   res.clearCookie("refreshToken", {
     httpOnly: true,
@@ -212,4 +232,4 @@ const logout = (req, res) => {
   res.status(200).json({ message: "Logged out successfully" });
 };
 
-module.exports = { register_orginization, register_user, login, logout, updateProfile};
+module.exports = { register_orginization, register_user, login, logout, updateProfile, viewProfile};
