@@ -1,0 +1,1 @@
+//genrate qrocdeode for attendance
