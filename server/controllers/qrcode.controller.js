@@ -10,7 +10,7 @@ exports.generateNewQRCode = async (req, res) => {
     // Validate qrType
     if (!qrType || !['check-in', 'check-out'].includes(qrType)) {
       return res.status(400).json({ 
-        message: "Invalid or missing qrType. Must be 'check-in' or 'check-out'" 
+        message: "Invalid or missing qrType. Must be 'check-in' or 'check-out' test" 
       });
     }
 
