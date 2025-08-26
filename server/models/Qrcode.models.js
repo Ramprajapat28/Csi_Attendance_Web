@@ -17,24 +17,16 @@ const qrCodeSchema = new mongoose.Schema(
       enum: ["check-in", "check-out"],
       required: true,
     },
-    validFrom: {
-      type: Date,
-      required: true,
-    },
-    validUntil: {
-      type: Date,
-      required: true,
-    },
-    location: {
-      latitude: {
-        type: Number,
-        required: true,
-      },
-      longitude: {
-        type: Number,
-        required: true,
-      },
-    },
+    // location: {
+    //   latitude: {
+    //     type: Number,
+    //     required: true,
+    //   },
+    //   longitude: {
+    //     type: Number,
+    //     required: true,
+    //   },
+    // },
     active: {
       type: Boolean,
       default: true,
