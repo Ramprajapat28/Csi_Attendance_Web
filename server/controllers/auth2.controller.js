@@ -184,8 +184,7 @@ const updateProfile = async (req, res) => {
       },
       {new:true},
     )
-      .populate(organizationId)
-      .select(-refreshToken);
+      
 
       if(!user){
         return res.status(404).json({ message: "User not found" });
