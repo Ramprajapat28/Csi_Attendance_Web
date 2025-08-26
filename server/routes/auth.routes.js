@@ -5,7 +5,9 @@ const {
   register_user,
   login,
   logout,
+  updateProfile,
 } = require("../controllers/auth2.controller");
+const authMiddleware = require ("../middleware/Auth.moddleware");
 
 //User SignUp or Login
 // router.post('/oauth/login', );
@@ -33,5 +35,8 @@ router.post("/login", login);
 
 //For logging out
 router.post("/logout", logout);
+
+//For updating profile
+router.post("/updateProfile",authMiddleware, updateProfile);
 
 module.exports = router;
