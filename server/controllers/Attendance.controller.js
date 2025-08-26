@@ -63,7 +63,7 @@ exports.scanQRCode = async (req, res) => {
       },
     });
 
-    qr.usageCount += 1;
+    // qr.usageCount += 1;
     await qr.save();
 
     return res.json({ message: "Attendance recorded", attendance: record });
