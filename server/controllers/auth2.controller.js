@@ -1,14 +1,14 @@
-const expres = require("express");
+const express = require("express");
 const User = require("../models/user.models");
 const Organization = require("../models/organization.models");
 const jwt = require("jsonwebtoken");
 
 const generateTokens = (userId) => {
   const accessToken = jwt.sign({ userId }, process.env.JWT_SECRET, {
-    expiresIn: "15m",
+    expiresIn: "2h", // ✅ Extended to 2 hours (was 15m)
   });
   const refreshToken = jwt.sign({ userId }, process.env.JWT_REFRESH_SECRET, {
-    expiresIn: "7d",
+    expiresIn: "30d", // ✅ Extended to 30 days (was 7d)
   });
   return { accessToken, refreshToken };
 };
@@ -173,55 +173,55 @@ const login = async (req, res) => {
 };
 
 const updateProfile = async (req, res) => {
-  try{
-    const {name, workingHours, password} = req.body;
+  try {
+    const { name, workingHours, password } = req.body;
 
     const user = await User.findByIdAndUpdate(
-      req.user._id,{
+      req.user._id,
+      {
         name,
         password,
         workingHours,
       },
-      {new:true},
-    )
-      
+      { new: true }
+    );
 
-      if(!user){
-        return res.status(404).json({ message: "User not found" });
-      }
-
-      const response = {
-        ...user.toObject(),
-        organization: user.organizationId || null,
-      };
-
-      res.json(response);
-  }
-  catch (error) {
-      console.error("Update user profile error:", error);
-      res.status(500).json({ message: "Failed to update user profile" });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
+
+    const response = {
+      ...user.toObject(),
+      organization: user.organizationId || null,
+    };
+
+    res.json(response);
+  } catch (error) {
+    console.error("Update user profile error:", error);
+    res.status(500).json({ message: "Failed to update user profile" });
+  }
 };
 
 const viewProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).populate("organizationId", "name").select("-password");
+    const user = await User.findById(req.user._id)
+      .populate("organizationId", "name")
+      .select("-password");
     if (!user) {
-    return res.status(404).json({ message: "User not found" });
-  }
+      return res.status(404).json({ message: "User not found" });
+    }
 
-  const response = {
-    ...user.toObject(),
-    organization: user.organizationId || null,
-  };
+    const response = {
+      ...user.toObject(),
+      organization: user.organizationId || null,
+    };
 
-  res.json(response);
- }
- catch (error) {
+    res.json(response);
+  } catch (error) {
     console.error("View profile error:", error);
     res.status(500).json({ message: "Failed to retrieve user profile" });
   }
-}
+};
 
 const logout = (req, res) => {
   res.clearCookie("refreshToken", {
@@ -232,4 +232,11 @@ const logout = (req, res) => {
   res.status(200).json({ message: "Logged out successfully" });
 };
 
-module.exports = { register_orginization, register_user, login, logout, updateProfile, viewProfile};
+module.exports = {
+  register_orginization,
+  register_user,
+  login,
+  logout,
+  updateProfile,
+  viewProfile,
+};

@@ -1,24 +1,40 @@
 require("dotenv").config();
-const connectDB = require("./config/database");
-
 const express = require("express");
-const app = express();
-connectDB();
-const qrcoderoutes = require("../server/routes/qrcode.routes");
-const router = require("./routes/auth.routes");
-const { scanQRCode } = require("./controllers/Attendance.controller");
+const connectDB = require("./config/database");
 const customCors = require("./config/cors");
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-app.use("/auth2", router);
+const app = express();
+
+// Connect to database first
+connectDB();
+
+// ⚠️ CRITICAL: Middleware order matters!
+// 1. CORS must come first
 app.use(customCors);
 
-app.use("/qrcode", qrcoderoutes);
-app.use("/attend", scanQRCode);
+// 2. Body parsing middleware BEFORE routes
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
-const PORT = process.env.PORT || 5000;
+// 3. Import routes AFTER middleware
+const authRoutes = require("./routes/auth.routes");
+const qrcodeRoutes = require("./routes/qrcode.routes");
+const attendanceRoutes = require("./routes/Attendance.routes");
 
+// 4. Routes come LAST
+app.use("/auth2", authRoutes);
+app.use("/qrcode", qrcodeRoutes);
+app.use("/attend", attendanceRoutes);
+
+// Health check endpoint
+app.get("/", (req, res) => {
+  res.json({
+    message: "Server is running!",
+    timestamp: new Date().toISOString(),
+  });
+});
+
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
 });

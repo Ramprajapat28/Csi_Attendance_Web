@@ -1,8 +1,7 @@
 const mongoose = require("mongoose");
 require("dotenv").config();
 
-const uri =
-  "mongodb+srv://warangadvait3000:Advait.3000@cluster0.bdx96p0.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const uri = process.env.MONGODB_URI || "mongodb://localhost:27017/qrocde";
 
 // keep your URI in .env file
 
