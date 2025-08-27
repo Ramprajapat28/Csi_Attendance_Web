@@ -1,12 +1,10 @@
 const geolib = require("geolib");
-const { isLocationWithin } = require("../utils/locationVerifier"); // Optional helper if you use it
 
 const antiSpoofingMiddleware = async (req, res, next) => {
   try {
     const { location, deviceInfo } = req.body;
     const user = req.user;
 
-    // Check if user exists
     if (!user) {
       return res.status(401).json({
         message: "User not authenticated",
@@ -14,75 +12,115 @@ const antiSpoofingMiddleware = async (req, res, next) => {
       });
     }
 
-    // Check if location is provided
+    // ✅ STRICT LOCATION VALIDATION
     if (!location || !location.latitude || !location.longitude) {
       return res.status(400).json({
-        message: "Location is required",
+        message: "Precise location is required for attendance",
         spoofingDetected: true,
+        required: ["latitude", "longitude", "accuracy"],
       });
     }
 
-    // Check for mock location indicators
-    if (deviceInfo && deviceInfo.isMockLocation) {
+    // ✅ CHECK FOR MOCK LOCATION
+    if (
+      deviceInfo &&
+      (deviceInfo.isMockLocation || deviceInfo.isFromMockProvider)
+    ) {
       return res.status(400).json({
-        message: "Mock location detected",
+        message:
+          "Mock/fake location detected. Please disable mock location in device settings.",
         spoofingDetected: true,
+        code: "MOCK_LOCATION_DETECTED",
       });
     }
 
-    // Check accuracy
-    if (location.accuracy && location.accuracy > 100) {
+    // ✅ ACCURACY VALIDATION
+    if (!location.accuracy || location.accuracy > 100) {
       return res.status(400).json({
-        message: "Location accuracy too low",
+        message: `Location accuracy too low (${location.accuracy}m). Please ensure GPS is enabled and try again.`,
         spoofingDetected: true,
+        minimumAccuracy: 100,
       });
     }
 
-    // Check for rapid location changes
+    // ✅ RAPID MOVEMENT DETECTION
     if (user.deviceInfo && user.deviceInfo.lastKnownLocation) {
       const lastLocation = user.deviceInfo.lastKnownLocation;
       const currentTime = new Date();
       const lastTime = new Date(lastLocation.timestamp);
+      const timeDiff = currentTime - lastTime;
 
-      if (currentTime - lastTime < 60000) {
+      if (timeDiff < 60000) {
+        // Less than 1 minute
         const distance = geolib.getDistance(
-          { latitude: lastLocation.latitude, longitude: lastLocation.longitude },
+          {
+            latitude: lastLocation.latitude,
+            longitude: lastLocation.longitude,
+          },
           { latitude: location.latitude, longitude: location.longitude }
         );
+
+        // More than 1km in under 1 minute is suspicious
         if (distance > 1000) {
           return res.status(400).json({
-            message: "Suspicious location change detected",
+            message: `Suspicious movement detected: ${distance}m in ${Math.round(
+              timeDiff / 1000
+            )}s`,
             spoofingDetected: true,
+            code: "RAPID_MOVEMENT_DETECTED",
           });
         }
       }
     }
 
-    // ✅ Update user’s last known location & IP
+    // ✅ IP GEOLOCATION CHECK (basic)
+    const currentIP = req.ip || req.connection.remoteAddress;
+    if (
+      user.deviceInfo &&
+      user.deviceInfo.lastKnownIP &&
+      user.deviceInfo.lastKnownIP !== currentIP
+    ) {
+      console.log(
+        "⚠️ IP address changed:",
+        user.deviceInfo.lastKnownIP,
+        "->",
+        currentIP
+      );
+    }
+
+    // ✅ UPDATE USER LOCATION
+    if (!user.deviceInfo) user.deviceInfo = {};
+
     user.deviceInfo.lastKnownLocation = {
       latitude: location.latitude,
       longitude: location.longitude,
+      accuracy: location.accuracy,
       timestamp: new Date(),
     };
 
-    if (deviceInfo && deviceInfo.ipAddress) {
-      user.deviceInfo.lastKnownIP = deviceInfo.ipAddress; // Add field to schema if not present
-    }
-
+    user.deviceInfo.lastKnownIP = currentIP;
     await user.save();
 
-    // ✅ Attach result to request (for downstream use)
+    // ✅ PASS VALIDATION RESULT TO NEXT MIDDLEWARE
     req.spoofingCheck = {
       passed: true,
       location: location,
+      validationsPassed: [
+        "location_provided",
+        "accuracy_acceptable",
+        "no_mock_location",
+        "movement_pattern_normal",
+      ],
     };
 
-    // Continue
+    console.log("✅ Anti-spoofing checks passed for user:", user.name);
     next();
-
   } catch (error) {
     console.error("Anti-spoofing middleware error:", error);
-    return res.status(500).json({ message: "Location verification failed" });
+    return res.status(500).json({
+      message: "Location verification failed",
+      spoofingDetected: true,
+    });
   }
 };
 
