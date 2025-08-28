@@ -42,14 +42,14 @@ const singleUser = async(req, res) => {
       return res.status(400).json({ message: "No user found"});
     }
     
-    const singleUser = await User.findById(id);
+    const singleUser = await User.findById(id).select("-password");
     if (!singleUser){
       return res.status(404).json({ error: "User not found" });
     } 
-    return res.status(202).json(user);
+    return res.status(202).json(singleUser);
   } catch(err){
     console.error("Error fetching singleUser:", err);
-    res.status(500).json({ error: 'Server error'})
+    return res.status(500).json({ error: 'Server error'})
   }
 }
 
