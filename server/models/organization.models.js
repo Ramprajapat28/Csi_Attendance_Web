@@ -18,11 +18,16 @@ const organizationSchema = new mongoose.Schema(
       latitude: {
         type: Number,
         // required: true,
+
+        default:19.0760
       },
       longitude: {
         type: Number,
+        default:72.8777,
         // required: true,
       },
+
+
       radius: {
         type: Number,
         default: 100, // meters
