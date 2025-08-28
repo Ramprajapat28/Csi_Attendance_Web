@@ -20,12 +20,13 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 const authRoutes = require("./routes/auth.routes");
 const qrcodeRoutes = require("./routes/qrcode.routes");
 const attendanceRoutes = require("./routes/Attendance.routes");
-
+const adminRoutes = require("./routes/admin.routes")
 
 // 4. Routes come LAST
 app.use("/auth2", authRoutes);
 app.use("/qrcode", qrcodeRoutes);
 app.use("/attend", attendanceRoutes);
+app.use("/admin", adminRoutes)
 
 // Health check endpoint
 app.get("/", (req, res) => {
