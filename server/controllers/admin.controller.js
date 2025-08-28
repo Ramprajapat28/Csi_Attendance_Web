@@ -19,7 +19,7 @@ const records = async (req, res) => {
       .skip((page - 1) * limit)
       .limit(parseInt(limit));
     const total = await Attendance.countDocuments({ organizationId });
-    res.json({
+    return res.json({
       records,
       total,
       page: parseInt(page),
@@ -27,7 +27,7 @@ const records = async (req, res) => {
     });
   } catch (error) {
     console.error("Error fetching records:", error);
-    res.status(500).json({
+    return res.status(500).json({
       message: "Failed to fetch attendance records",
       error: error.message,
     });
@@ -46,7 +46,7 @@ const singleUser = async(req, res) => {
     if (!singleUser){
       return res.status(404).json({ error: "User not found" });
     } 
-    res.status(202).json(user);
+    return res.status(202).json(user);
   } catch(err){
     console.error("Error fetching singleUser:", err);
     res.status(500).json({ error: 'Server error'})
