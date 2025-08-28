@@ -45,3 +45,22 @@ router.get("/records", auth, async (req, res) => {
 });
 
 module.exports = router;
+router.get("/singleUser/:id", auth ,async(req, res) => {
+  try{
+    const id = req.params.id;
+    if (!id) {
+      return res.status(400).json({ message: "No user found"});
+    }
+    
+    const singleUser = await User.findById(id);
+    if (!singleUser){
+      return res.status(404).json({ error: "User not found" });
+    } 
+    res.status(202).json(user);
+  } catch(err){
+    console.error("Error fetching singleUser:", err);
+    res.status(500).json({ error: 'Server error'})
+  }
+})
+
+module.exports = router;

@@ -41,7 +41,7 @@ router.post("/logout", logout);
 //For updating profile
 router.put("/updateProfile",authMiddleware, role,updateProfile);
 
-//For updating profile
+//For viewprofile profile
 router.get("/viewProfile",authMiddleware, viewProfile);
 
 module.exports = router;

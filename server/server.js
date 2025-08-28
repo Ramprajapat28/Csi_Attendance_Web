@@ -1,6 +1,6 @@
 require("dotenv").config();
 const express = require("express");
-const connectDB = require("./config/database");
+const connectDB = require("./config/Database");
 const customCors = require("./config/cors");
 
 const app = express();
@@ -20,6 +20,7 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 const authRoutes = require("./routes/auth.routes");
 const qrcodeRoutes = require("./routes/qrcode.routes");
 const attendanceRoutes = require("./routes/Attendance.routes");
+
 
 // 4. Routes come LAST
 app.use("/auth2", authRoutes);
