@@ -1,43 +1,34 @@
 const express = require("express");
 const router = express.Router();
+
+// Only keep auth, remove antiSpoofingMiddleware and fingerprintCheckMiddleware
 const auth = require("../middleware/Auth.middleware");
-const antiSpoofingMiddleware = require("../middleware/DIstance.middleware");
-const fingerprintCheckMiddleware = require("../middleware/spoofing.middleware");
 const attendanceController = require("../controllers/Attendance.controller");
 const Attendance = require("../models/Attendance.models");
 
-// QR scan with ALL security features enabled
+// 💡 QR scan with ALL security features disabled for testing
 router.post(
   "/scan",
   auth,
-  antiSpoofingMiddleware,
-  fingerprintCheckMiddleware,
   attendanceController.scanQRCode
 );
 
 router.get("/records", auth, async (req, res) => {
   try {
     if (!req.user.organizationId) {
-      return res
-        .status(400)
-        .json({ message: "No organization associated with user" });
+      return res.status(400).json({ message: "No organization associated with user" });
     }
-
     const { organizationId } = req.user;
     const { page = 1, limit = 20 } = req.query;
-
     if (isNaN(page) || isNaN(limit) || page < 1 || limit < 1) {
       return res.status(400).json({ message: "Invalid pagination parameters" });
     }
-
     const records = await Attendance.find({ organizationId })
       .populate("userId", "name email")
       .sort({ timestamp: -1 })
       .skip((page - 1) * limit)
       .limit(parseInt(limit));
-
     const total = await Attendance.countDocuments({ organizationId });
-
     res.json({
       records,
       total,

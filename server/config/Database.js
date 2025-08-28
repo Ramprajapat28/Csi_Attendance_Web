@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 require("dotenv").config();
 
-const uri = process.env.MONGODB_URI || "mongodb+srv://warangadvait3000:Advait.3000@cluster0.bdx96p0.mongodb.net/";
+const uri = process.env.MONGODB_URI || "mongodb+srv://aryanmadkar70_db_user:aryan@cluster0.oxxw1kn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
 // keep your URI in .env file
 
