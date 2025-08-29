@@ -74,7 +74,7 @@ const Qrcode = () => {
         //         exit={{opacity:0 , x:-100}}
         //         transition = {{duration:0.5}}
         //     >
-        <div className="flex flex-col items-center justify-center w-screen h-screen gap-15 pt-[70px] pb-[30px]">
+        <div className="flex flex-col items-center justify-center w-screen h-[100dvh] gap-15 pt-[70px] pb-[30px]">
             <img onClick={cancel} src="/src/assets/cross.png" className='h-[12px] absolute right-[15px] top-[25px]' alt="" />
             <div className="text flex flex-col items-center justify-center gap-0.5">
                 <span className='font-bold text-lg'>Scan Code</span>
