@@ -15,42 +15,26 @@ const organizationSchema = new mongoose.Schema(
       country: String,
     },
     location: {
-      latitude: {
-        type: Number,
-        // required: true,
-
-        default:19.0760
-      },
-      longitude: {
-        type: Number,
-        default:72.8777,
-        // required: true,
-      },
-
-
-      radius: {
-        type: Number,
-        default: 100, // meters
-      },
+      latitude: { type: Number, default: 19.076 },
+      longitude: { type: Number, default: 72.8777 },
+      radius: { type: Number, default: 100 },
     },
     settings: {
-      timezone: {
-        type: String,
-        default: "UTC",
-      },
-      qrCodeValidityMinutes: {
-        type: Number,
-        default: 30,
-      },
-      locationToleranceMeters: {
-        type: Number,
-        default: 50,
-      },
+      timezone: { type: String, default: "UTC" },
+      qrCodeValidityMinutes: { type: Number, default: 30 },
+      locationToleranceMeters: { type: Number, default: 50 },
     },
     adminId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      // required: true,
+    },
+    checkInQRCodeId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "QRCode",
+    },
+    checkOutQRCodeId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "QRCode",
     },
     isActive: {
       type: Boolean,

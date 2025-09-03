@@ -2,7 +2,8 @@ const express = require("express");
 const User = require("../models/user.models");
 const Organization = require("../models/organization.models");
 const jwt = require("jsonwebtoken");
-
+const qrGenerator = require("../utils/qrGenarator");
+const QRCode = require("../models/Qrcode.models");
 const generateTokens = (userId) => {
   const accessToken = jwt.sign({ userId }, process.env.JWT_SECRET, {
     expiresIn: "2h", // ✅ Extended to 2 hours (was 15m)
@@ -43,6 +44,32 @@ const register_orginization = async (req, res) => {
     user.organizationId = organization._id;
     await user.save();
 
+    const checkInQR = await qrGenerator.generateQRCode(
+      organization._id,
+      organization.location
+    );
+    const checkInQRDoc = await QRCode.create({
+      organizationId: organization._id,
+      code: checkInQR.code,
+      qrType: "check-in",
+      qrImageData: checkInQR.qrCodeImage,
+      active: true,
+    });
+    const checkOutQR = await qrGenerator.generateQRCode(
+      organization._id,
+      organization.location
+    );
+    const checkOutQRDoc = await QRCode.create({
+      organizationId: organization._id,
+      code: checkOutQR.code,
+      qrType: "check-out",
+      qrImageData: checkOutQR.qrCodeImage,
+      active: true,
+    });
+
+    organization.checkInQRCodeId = checkInQRDoc._id;
+    organization.checkOutQRCodeId = checkOutQRDoc._id;
+    await organization.save();
     const { accessToken, refreshToken } = generateTokens(user._id);
 
     res.cookie("refreshToken", refreshToken, {
