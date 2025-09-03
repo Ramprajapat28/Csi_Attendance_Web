@@ -4,12 +4,13 @@ const Organization = require("../models/organization.models");
 const jwt = require("jsonwebtoken");
 const qrGenerator = require("../utils/qrGenarator");
 const QRCode = require("../models/Qrcode.models");
+
 const generateTokens = (userId) => {
   const accessToken = jwt.sign({ userId }, process.env.JWT_SECRET, {
-    expiresIn: "2h", // ✅ Extended to 2 hours (was 15m)
+    expiresIn: "2h", // Extended to 2 hours
   });
   const refreshToken = jwt.sign({ userId }, process.env.JWT_REFRESH_SECRET, {
-    expiresIn: "30d", // ✅ Extended to 30 days (was 7d)
+    expiresIn: "30d", // Extended to 30 days
   });
   return { accessToken, refreshToken };
 };
@@ -20,30 +21,33 @@ const register_orginization = async (req, res) => {
     if (!email || !password || !name || !organizationName) {
       return res.status(400).json({ message: "All fields are required" });
     }
-    console.log(req.body);
+
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
+
+    // Create user
     const user = new User({
       email,
       password,
       name,
       role: "organization",
     });
-
     await user.save();
+
+    // Create organization
     const organization = new Organization({
       name: organizationName,
-
       adminId: user._id,
     });
-
     await organization.save();
 
+    // Link user to organization
     user.organizationId = organization._id;
     await user.save();
 
+    // Generate check-in QR
     const checkInQR = await qrGenerator.generateQRCode(
       organization._id,
       organization.location
@@ -55,6 +59,8 @@ const register_orginization = async (req, res) => {
       qrImageData: checkInQR.qrCodeImage,
       active: true,
     });
+
+    // Generate check-out QR
     const checkOutQR = await qrGenerator.generateQRCode(
       organization._id,
       organization.location
@@ -67,9 +73,11 @@ const register_orginization = async (req, res) => {
       active: true,
     });
 
+    // Save QR codes in org
     organization.checkInQRCodeId = checkInQRDoc._id;
     organization.checkOutQRCodeId = checkOutQRDoc._id;
     await organization.save();
+
     const { accessToken, refreshToken } = generateTokens(user._id);
 
     res.cookie("refreshToken", refreshToken, {
@@ -90,6 +98,8 @@ const register_orginization = async (req, res) => {
       organization: {
         id: organization._id,
         name: organization.name,
+        checkInQRCode: checkInQRDoc.code,
+        checkOutQRCode: checkOutQRDoc.code,
       },
       accessToken,
     });
@@ -110,10 +120,12 @@ const register_user = async (req, res) => {
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
-    organization = await Organization.findOne({ name: organizationCode });
+
+    const organization = await Organization.findOne({ name: organizationCode });
     if (!organization) {
       return res.status(400).json({ message: "Invalid organization code" });
     }
+
     const user = new User({
       email,
       password,
@@ -121,7 +133,6 @@ const register_user = async (req, res) => {
       role: "user",
       organizationId: organization._id,
     });
-
     await user.save();
 
     const { accessToken, refreshToken } = generateTokens(user._id);
@@ -202,16 +213,14 @@ const login = async (req, res) => {
 const updateProfile = async (req, res) => {
   try {
     const { name, workingHours, password } = req.body;
+    const updateData = {};
+    if (name) updateData.name = name;
+    if (workingHours) updateData.workingHours = workingHours;
+    if (password) updateData.password = password;
 
-    const user = await User.findByIdAndUpdate(
-      req.user._id,
-      {
-        name,
-        password,
-        workingHours,
-      },
-      { new: true }
-    );
+    const user = await User.findByIdAndUpdate(req.user._id, updateData, {
+      new: true,
+    });
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });

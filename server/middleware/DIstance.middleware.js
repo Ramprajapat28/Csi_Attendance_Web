@@ -12,7 +12,7 @@ const antiSpoofingMiddleware = async (req, res, next) => {
       });
     }
 
-    // ✅ STRICT LOCATION VALIDATION
+    // Strict location validation
     if (!location || !location.latitude || !location.longitude) {
       return res.status(400).json({
         message: "Precise location is required for attendance",
@@ -21,7 +21,7 @@ const antiSpoofingMiddleware = async (req, res, next) => {
       });
     }
 
-    // ✅ CHECK FOR MOCK LOCATION
+    // Check for mock location
     if (
       deviceInfo &&
       (deviceInfo.isMockLocation || deviceInfo.isFromMockProvider)
@@ -34,7 +34,7 @@ const antiSpoofingMiddleware = async (req, res, next) => {
       });
     }
 
-    // ✅ ACCURACY VALIDATION
+    // Accuracy validation
     if (!location.accuracy || location.accuracy > 100) {
       return res.status(400).json({
         message: `Location accuracy too low (${location.accuracy}m). Please ensure GPS is enabled and try again.`,
@@ -43,13 +43,12 @@ const antiSpoofingMiddleware = async (req, res, next) => {
       });
     }
 
-    // ✅ RAPID MOVEMENT DETECTION
+    // Rapid movement detection
     if (user.deviceInfo && user.deviceInfo.lastKnownLocation) {
       const lastLocation = user.deviceInfo.lastKnownLocation;
       const currentTime = new Date();
       const lastTime = new Date(lastLocation.timestamp);
       const timeDiff = currentTime - lastTime;
-
       if (timeDiff < 60000) {
         // Less than 1 minute
         const distance = geolib.getDistance(
@@ -59,7 +58,6 @@ const antiSpoofingMiddleware = async (req, res, next) => {
           },
           { latitude: location.latitude, longitude: location.longitude }
         );
-
         // More than 1km in under 1 minute is suspicious
         if (distance > 1000) {
           return res.status(400).json({
@@ -73,7 +71,7 @@ const antiSpoofingMiddleware = async (req, res, next) => {
       }
     }
 
-    // ✅ IP GEOLOCATION CHECK (basic)
+    // IP Geolocation check (basic)
     const currentIP = req.ip || req.connection.remoteAddress;
     if (
       user.deviceInfo &&
@@ -88,7 +86,7 @@ const antiSpoofingMiddleware = async (req, res, next) => {
       );
     }
 
-    // ✅ UPDATE USER LOCATION
+    // Update user location
     if (!user.deviceInfo) user.deviceInfo = {};
 
     user.deviceInfo.lastKnownLocation = {
@@ -99,9 +97,10 @@ const antiSpoofingMiddleware = async (req, res, next) => {
     };
 
     user.deviceInfo.lastKnownIP = currentIP;
+
     await user.save();
 
-    // ✅ PASS VALIDATION RESULT TO NEXT MIDDLEWARE
+    // Pass validation result to next middleware
     req.spoofingCheck = {
       passed: true,
       location: location,
@@ -114,6 +113,7 @@ const antiSpoofingMiddleware = async (req, res, next) => {
     };
 
     console.log("✅ Anti-spoofing checks passed for user:", user.name);
+
     next();
   } catch (error) {
     console.error("Anti-spoofing middleware error:", error);

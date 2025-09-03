@@ -1,60 +1,109 @@
-const express = require("express");
 const User = require("../models/user.models");
 const Attendance = require("../models/Attendance.models");
+const QRCode = require("../models/Qrcode.models");
+const Organization = require("../models/organization.models");
 
-
+// Define the missing records function to avoid route errors
 const records = async (req, res) => {
   try {
-    if (!req.user.organizationId) {
-      return res.status(400).json({ message: "No organization associated with user" });
+    const orgId = req.user.organizationId;
+    if (!orgId) {
+      return res
+        .status(400)
+        .json({ message: "User not associated with any organization" });
     }
-    const { organizationId } = req.user;
-    const { page = 1, limit = 20 } = req.query;
-    if (isNaN(page) || isNaN(limit) || page < 1 || limit < 1) {
-      return res.status(400).json({ message: "Invalid pagination parameters" });
-    }
-    const records = await Attendance.find({ organizationId })
+    const attendanceRecords = await Attendance.find({ organizationId: orgId })
       .populate("userId", "name email")
-      .sort({ timestamp: -1 })
-      .skip((page - 1) * limit)
-      .limit(parseInt(limit));
-    const total = await Attendance.countDocuments({ organizationId });
-    return res.json({
-      records,
-      total,
-      page: parseInt(page),
-      pages: Math.ceil(total / limit),
-    });
+      .sort({ timestamp: -1 });
+    res.json({ attendanceRecords });
   } catch (error) {
-    console.error("Error fetching records:", error);
-    return res.status(500).json({
-      message: "Failed to fetch attendance records",
-      error: error.message,
-    });
+    console.error("Error getting records:", error);
+    res.status(500).json({ message: "Failed to fetch records" });
   }
 };
 
-
-const singleUser = async(req, res) => {
-  try{
-    const id = req.params.id;
-    if (!id) {
-      return res.status(400).json({ message: "No user found"});
+const getOrganizationQRCodes = async (req, res) => {
+  try {
+    const orgId = req.user.organizationId;
+    if (!orgId) {
+      return res
+        .status(400)
+        .json({ message: "User not associated with any organization" });
     }
-    
-    const singleUser = await User.findById(id).select("-password");
-    if (!singleUser){
-      return res.status(404).json({ error: "User not found" });
-    } 
-    return res.status(202).json(singleUser);
-  } catch(err){
-    console.error("Error fetching singleUser:", err);
-    return res.status(500).json({ error: 'Server error'})
+    const org = await Organization.findById(orgId)
+      .populate("checkInQRCodeId")
+      .populate("checkOutQRCodeId");
+    if (!org) {
+      return res.status(404).json({ message: "Organization not found" });
+    }
+    res.json({
+      checkInQRCode: org.checkInQRCodeId,
+      checkOutQRCode: org.checkOutQRCodeId,
+    });
+  } catch (error) {
+    console.error("Error fetching organization's QR codes:", error);
+    res.status(500).json({ message: "Failed to fetch QR codes" });
   }
-}
+};
 
+const getTodaysAttendance = async (req, res) => {
+  try {
+    const orgId = req.user.organizationId;
+    if (!orgId) {
+      return res
+        .status(400)
+        .json({ message: "User not associated with any organization" });
+    }
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+    const records = await Attendance.find({
+      organizationId: orgId,
+      timestamp: { $gte: startOfDay, $lte: endOfDay },
+    }).populate("userId", "name email");
+    res.json({ records });
+  } catch (error) {
+    console.error("Error fetching today's attendance:", error);
+    res.status(500).json({ message: "Failed to fetch today's attendance" });
+  }
+};
 
-module.exports ={
-    records,
-    singleUser
-}
+const deleteUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+    if (String(user.organizationId) !== String(req.user.organizationId)) {
+      return res.status(403).json({
+        message: "Forbidden to delete user outside your organization",
+      });
+    }
+    await User.findByIdAndDelete(userId);
+    res.json({ message: "User deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    res.status(500).json({ message: "Failed to delete user" });
+  }
+};
+
+const singleUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await User.findById(userId)
+      .select("-password")
+      .populate("organizationId", "name");
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.json(user);
+  } catch (error) {
+    console.error("Error fetching single user:", error);
+    res.status(500).json({ message: "Failed to fetch user" });
+  }
+};
+module.exports = {
+  records,
+  singleUser,
+  getOrganizationQRCodes,
+  getTodaysAttendance,
+  deleteUser,
+};

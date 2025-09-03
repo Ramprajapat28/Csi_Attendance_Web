@@ -1,18 +1,12 @@
 const express = require("express");
 const router = express.Router();
-
-// Only keep auth, remove antiSpoofingMiddleware and fingerprintCheckMiddleware
 const auth = require("../middleware/Auth.middleware");
 const attendanceController = require("../controllers/Attendance.controller");
-const Attendance = require("../models/Attendance.models");
 
-// 💡 QR scan with ALL security features disabled for testing
-router.post(
-  "/scan",
-  auth,
-  attendanceController.scanQRCode
-);
+// Scan QR
+router.post("/scan", auth, attendanceController.scanQRCode);
 
-
+// Get past attendance for logged-in user
+router.get("/past", auth, attendanceController.getUserPastAttendance);
 
 module.exports = router;
