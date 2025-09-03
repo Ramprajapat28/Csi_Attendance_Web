@@ -5,13 +5,14 @@ const corsOptions = {
     if (!origin) return callback(null, true);
 
     const allowedOrigins = [
-      "http://localhost:3000",
-      "http://localhost:3001",
-      "http://localhost:5000",
-      "http://127.0.0.1:3000",
-      "http://127.0.0.1:5000",
-      "http://127.0.0.1:5500", // Live Server default port
-      "null", // For local HTML files (file:// protocol)
+      "*",
+      // "http://localhost:3000",
+      // "http://localhost:3001",
+      // "http://localhost:5000",
+      // "http://127.0.0.1:3000",
+      // "http://127.0.0.1:5000",
+      // "http://127.0.0.1:5500", // Live Server default port
+      // "null", // For local HTML files (file:// protocol)
       process.env.FRONTEND_URL,
     ];
 
