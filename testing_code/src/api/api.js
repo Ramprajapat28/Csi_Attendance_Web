@@ -2,7 +2,7 @@ import axios from "axios";
 
 const API_BASE_URL =
   (typeof process !== "undefined" && process.env?.REACT_APP_API_BASE_URL) ||
-  "http://localhost:3000";
+  "https://csi-attendance-web-s1yf.onrender.com";
 
 // Create axios instance
 const apiClient = axios.create({
