@@ -60,7 +60,7 @@ const getTodaysAttendance = async (req, res) => {
     endOfDay.setHours(23, 59, 59, 999);
     const records = await Attendance.find({
       organizationId: orgId,
-      timestamp: { $gte: startOfDay, $lte: endOfDay },
+      // timestamp: { $gte: startOfDay, $lte: endOfDay },
     }).populate("userId", "name email");
     res.json({ records });
   } catch (error) {
