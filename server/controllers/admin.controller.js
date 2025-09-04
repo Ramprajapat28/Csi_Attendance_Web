@@ -54,15 +54,47 @@ const getTodaysAttendance = async (req, res) => {
         .status(400)
         .json({ message: "User not associated with any organization" });
     }
-    const startOfDay = new Date();
-    startOfDay.setHours(0, 0, 0, 0);
-    const endOfDay = new Date();
-    endOfDay.setHours(23, 59, 59, 999);
+    
+    const now = new Date();
+    const istOffset = 5.5 * 60 * 60 * 1000; // +5:30 hrs
+    const istNow = new Date(now.getTime() + istOffset);
+
+    const startOfDayIST = new Date(Date.UTC(
+      istNow.getUTCFullYear(),
+      istNow.getUTCMonth(),
+      istNow.getUTCDate(),
+      0, 0, 0, 0
+    ));
+    const endOfDayIST = new Date(Date.UTC(
+      istNow.getUTCFullYear(),
+      istNow.getUTCMonth(),
+      istNow.getUTCDate(),
+      23, 59, 59, 999
+    ));
+
+    // Fetch records
     const records = await Attendance.find({
       organizationId: orgId,
-      // timestamp: { $gte: startOfDay, $lte: endOfDay },
+      createdAt: { $gte: startOfDayIST, $lte: endOfDayIST },
     }).populate("userId", "name email");
-    res.json({ records });
+
+    // Add IST time to response
+    const formatted = records.map(record => {
+      const obj = record.toObject();
+      obj.timeIST = new Date(record.createdAt.getTime() + istOffset);
+      return obj;
+    });
+    res.json({ records: formatted });
+
+    // const startOfDay = new Date();
+    // startOfDay.setHours(0, 0, 0, 0);
+    // const endOfDay = new Date();
+    // endOfDay.setHours(23, 59, 59, 999);
+    // const records = await Attendance.find({
+    //   organizationId: orgId,
+    //   // timestamp: { $gte: startOfDay, $lte: endOfDay },
+    // }).populate("userId", "name email");
+    // res.json({ records });
   } catch (error) {
     console.error("Error fetching today's attendance:", error);
     res.status(500).json({ message: "Failed to fetch today's attendance" });

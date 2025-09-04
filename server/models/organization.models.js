@@ -41,7 +41,23 @@ const organizationSchema = new mongoose.Schema(
       default: true,
     },
   },
-  // { timestamps: true }
+  { timestamps: true }
 );
+
+// Virtuals for IST
+organizationSchema.virtual("createdAtIST").get(function () {
+  return this.createdAt
+    ? this.createdAt.toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })
+    : null;
+});
+
+organizationSchema.virtual("updatedAtIST").get(function () {
+  return this.updatedAt
+    ? this.updatedAt.toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })
+    : null;
+});
+
+organizationSchema.set("toJSON", { virtuals: true });
+organizationSchema.set("toObject", { virtuals: true });
 
 module.exports = mongoose.model("Organization", organizationSchema);

@@ -37,10 +37,28 @@ const qrCodeSchema = new mongoose.Schema(
     },
     qrImageData: String, // Base64 encoded QR code image
   },
-  // {
-  //   timestamps: true,
-  // }
+  {
+    timestamps: true,
+  }
 );
+
+// Virtuals for IST conversion
+qrCodeSchema.virtual("createdAtIST").get(function () {
+  return this.createdAt
+    ? this.createdAt.toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })
+    : null;
+});
+
+qrCodeSchema.virtual("updatedAtIST").get(function () {
+  return this.updatedAt
+    ? this.updatedAt.toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })
+    : null;
+});
+
+
+qrCodeSchema.set("toJSON", { virtuals: true });
+qrCodeSchema.set("toObject", { virtuals: true });
+
 
 qrCodeSchema.index({ organizationId: 1, validFrom: 1, validUntil: 1 });
 qrCodeSchema.index({ code: 1, active: 1 });

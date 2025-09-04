@@ -25,16 +25,16 @@ const attendanceSchema = new mongoose.Schema({
   //   type: Date,
   //   default: Date.now,
   // },
-  newDate:{
+  // newDate:{
 
-    type: Date,
-    default: () => {
-      const now = new Date();
-      // Offset IST: UTC + 5 hours 30 minutes
-      const istOffset = 5.5 * 60 * 60 * 1000; // milliseconds
-      return new Date(now.getTime() + istOffset);
-    }
-  },
+  //   type: Date,
+  //   default: () => {
+  //     const now = new Date();
+  //     // Offset IST: UTC + 5 hours 30 minutes
+  //     const istOffset = 5.5 * 60 * 60 * 1000; // milliseconds
+  //     return new Date(now.getTime() + istOffset);
+  //   }
+  // },
 
 
   location: {
@@ -66,7 +66,7 @@ const attendanceSchema = new mongoose.Schema({
   },
   notes: String,
  },
-  // { timestamps: true }
+  { timestamps: true }
 );
 
 
