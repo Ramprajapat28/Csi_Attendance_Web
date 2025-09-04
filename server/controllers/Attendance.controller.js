@@ -12,7 +12,7 @@ exports.getUserPastAttendance = async (req, res) => {
 
     const records = await Attendance.find({
       userId,
-      timestamp: { $gte: oneMonthAgo },
+      // timestamp: { $gte: oneMonthAgo },
     }).sort({ timestamp: -1 });
 
     res.json({ records });
