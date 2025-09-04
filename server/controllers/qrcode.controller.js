@@ -53,7 +53,7 @@ exports.getActiveQRCode = async (req, res) => {
   try {
     const { qrType } = req.query; // Expected: "check-in" or "check-out"
     const orgId = req.user.organizationId;
-    const now = new Date();
+    // const now = new Date();
 
     const qr = await QRCode.findOne({
       organizationId: orgId,

@@ -37,9 +37,9 @@ const qrCodeSchema = new mongoose.Schema(
     },
     qrImageData: String, // Base64 encoded QR code image
   },
-  {
-    timestamps: true,
-  }
+  // {
+  //   timestamps: true,
+  // }
 );
 
 qrCodeSchema.index({ organizationId: 1, validFrom: 1, validUntil: 1 });

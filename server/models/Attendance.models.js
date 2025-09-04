@@ -21,10 +21,22 @@ const attendanceSchema = new mongoose.Schema({
     enum: ["check-in", "check-out"],
     required: true,
   },
-  timestamp: {
+  // timestamp: {
+  //   type: Date,
+  //   default: Date.now,
+  // },
+  newDate:{
+
     type: Date,
-    default: Date.now,
+    default: () => {
+      const now = new Date();
+      // Offset IST: UTC + 5 hours 30 minutes
+      const istOffset = 5.5 * 60 * 60 * 1000; // milliseconds
+      return new Date(now.getTime() + istOffset);
+    }
   },
+
+
   location: {
     latitude: {
       type: Number,
@@ -53,7 +65,9 @@ const attendanceSchema = new mongoose.Schema({
     spoofingDetected: Boolean,
   },
   notes: String,
-}, { timestamps: true });
+ },
+  // { timestamps: true }
+);
 
 
 

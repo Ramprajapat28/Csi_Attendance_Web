@@ -41,7 +41,7 @@ const organizationSchema = new mongoose.Schema(
       default: true,
     },
   },
-  { timestamps: true }
+  // { timestamps: true }
 );
 
 module.exports = mongoose.model("Organization", organizationSchema);

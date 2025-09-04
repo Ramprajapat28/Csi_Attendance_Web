@@ -73,6 +73,9 @@ exports.scanQRCode = async (req, res) => {
       timestamp: new Date(),
       location: safeLocation,
       deviceInfo: safeDeviceInfo,
+      // timestamp: new Date(),
+      location: location || { latitude: 0, longitude: 0, accuracy: 0 },
+      deviceInfo: deviceInfo || {},
       verified: true,
       verificationDetails: {
         locationMatch: true,
@@ -94,7 +97,7 @@ exports.scanQRCode = async (req, res) => {
         user: user.name,
         organization: org.name,
         type: type,
-        timestamp: record.timestamp,
+        // timestamp: record.timestamp,
       },
     });
   } catch (error) {
