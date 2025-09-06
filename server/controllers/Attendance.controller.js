@@ -220,3 +220,20 @@ exports.scanQRCode = async (req, res) => {
 //     });
 //   }
 // };
+
+// Upload attendance file (CSV/Excel)
+exports.uploadAttendanceFile = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: "No file uploaded" });
+    }
+
+    res.json({
+      success: true,
+      message: "Attendance file uploaded successfully!",
+      fileUrl: req.file.path, // Cloudinary URL
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
