@@ -22,8 +22,12 @@
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.19.0",
     "mongoose": "^8.17.0",
+<<<<<<< HEAD
     "multer": "^2.0.2",
     "multer-storage-cloudinary": "^4.0.0",
+=======
+    "nodemailer": "^7.0.6",
+>>>>>>> b932bc4 (node mailer added)
     "nodemon": "^3.1.10",
     "qrcode": "^1.5.4"
   }

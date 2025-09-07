@@ -4,6 +4,8 @@ const Organization = require("../models/organization.models");
 const jwt = require("jsonwebtoken");
 const qrGenerator = require("../utils/qrGenarator");
 const QRCode = require("../models/Qrcode.models");
+const { sendMail } = require("../utils/mailer");
+
 
 const generateTokens = (userId) => {
   const accessToken = jwt.sign({ userId }, process.env.JWT_SECRET, {
@@ -111,8 +113,8 @@ const register_orginization = async (req, res) => {
 
 const register_user = async (req, res) => {
   try {
-    const { email, password, name, organizationCode } = req.body;
-    if (!email || !password || !name) {
+    const { email,  name, organizationCode } = req.body;
+    if (!email || !organizationCode || !name) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
@@ -126,14 +128,36 @@ const register_user = async (req, res) => {
       return res.status(400).json({ message: "Invalid organization code" });
     }
 
-    const user = new User({
+     const user = new User({
       email,
-      password,
+      password: "TEMP_PASS",
       name,
       role: "user",
       organizationId: organization._id,
     });
     await user.save();
+
+    // 🔹 Generate reset token immediately after registration
+    const resetToken = jwt.sign(
+      { userId: user._id },
+      process.env.JWT_RESET_SECRET,
+      { expiresIn: "15m" }
+    );
+
+    
+
+const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
+
+// 🔹 Send reset password email
+await sendMail(
+  user.email,
+  "Set Your Account Password",
+  `<h3>Welcome to ${organization.name}</h3>
+   <p>You’ve been added to the organization. Please set your password:</p>
+   <a href="${resetLink}">${resetLink}</a>
+   <p>This link will expire in 15 minutes.</p>`
+);
+
 
     const { accessToken, refreshToken } = generateTokens(user._id);
 
