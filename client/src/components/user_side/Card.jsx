@@ -3,6 +3,7 @@ import { useState } from "react";
 import TimeProgressBar from "./TimeProgressBar";
 
 function Card() {
+  const user = JSON.parse(localStorage.getItem("userData"));
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
@@ -79,11 +80,11 @@ function Card() {
                     <h4 className="text-[12px] text-[#6C7278]">Details:</h4>
                     <div className="flex flex-col gap-[12px]">
                       <h5 className="text-[14px]">Name:</h5>
-                      <p className="text-[12px] font-normal">John Smith</p>
+                      <p className="text-[12px] font-normal">{user?.name}</p>
                     </div>
                     <div className="flex flex-col gap-[12px] w-[150px]">
                       <h5 className="text-[14px]">Employee ID:</h5>
-                      <p className="text-[12px] font-normal">EMP0234</p>
+                      <p className="text-[12px] font-normal">{user?.id}</p>
                     </div>
                     <div className="flex flex-col gap-[12px]">
                       <h5 className="text-[14px]">Department:</h5>
@@ -91,7 +92,7 @@ function Card() {
                     </div>
                     <div className="flex flex-col gap-[12px]">
                       <h5 className="text-[14px]">Date:</h5>
-                      <p className="text-[12px] font-normal">05/07/2025</p>
+                      <p className="text-[12px] font-normal">{new Date().toLocaleDateString()}</p>
                     </div>
                     <div className="flex w-[300px]">
                       <div className="flex w-[150px] flex-col gap-[12px]">
