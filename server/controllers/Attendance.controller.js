@@ -3,6 +3,7 @@ const QRCode = require("../models/Qrcode.models");
 const Organization = require("../models/organization.models");
 const geolib = require("geolib");
 const { isLocationWithin } = require("../utils/locationVerifier");
+const Time = require("../utils/timeRefresher")
 
 
 exports.getUserPastAttendance = async (req, res) => {
@@ -63,6 +64,13 @@ exports.scanQRCode = async (req, res) => {
         .json({ message: "Missing required fields: code and type" });
     }
 
+    if (user.lastActivity == false && type === "check-out") {
+      return res.status(400).json({ message: "Cannot check-out without checking in first." });
+    }
+
+    if (user.lastActivity == true && type === "check-in") {
+      return res.status(400).json({ message: "Cannot check-in without checking out first."});
+    }
     const qr = await QRCode.findOne({ code, active: true });
     if (!qr) {
       return res.status(400).json({ message: "Invalid or expired QR code" });
@@ -132,6 +140,7 @@ exports.scanQRCode = async (req, res) => {
     });
   }
 };
+
 
 
 // exports.scanQRCode = async (req, res) => {

@@ -38,6 +38,11 @@ const userSchema = new mongoose.Schema({
       return this.role === "user";
     },
   },
+  lastActivity:{
+    type: Boolean,
+    default: false,
+  },
+
   deviceInfo: {
     deviceId: String,
     deviceType: String,

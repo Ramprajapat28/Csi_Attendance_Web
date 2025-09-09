@@ -3,9 +3,7 @@ const express = require("express");
 const connectDB = require("./config/Database");
 const customCors = require("./config/cors");
 
-
-
-
+const ScheduleAttendanceCheck = require("./utils/timeRefresher");
 const app = express();
 
 // Connect to database first
@@ -30,7 +28,7 @@ const passwordResetRoutes = require("./routes/resetPassword.routes");
 app.use("/auth2", authRoutes);
 app.use("/qrcode", qrcodeRoutes);
 app.use("/attend", attendanceRoutes);
-app.use("/admin", adminRoutes)
+app.use("/admin", adminRoutes);
 app.use("/password", passwordResetRoutes);
 
 // Health check endpoint
@@ -44,8 +42,5 @@ app.get("/", (req, res) => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
+  ScheduleAttendanceCheck();
 });
-
-
-
-
