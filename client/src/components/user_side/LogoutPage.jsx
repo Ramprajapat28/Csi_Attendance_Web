@@ -3,18 +3,26 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext';
 
 const Logout = () => {
+    const user = JSON.parse(localStorage.getItem("userData"));
     const { logout} = useAuth()
-     const navigate = useNavigate();
+    const navigate = useNavigate();
     const hidden = () => {
         logout()
         navigate('/')
     }
+    // const cancel = () => navigate("/Dashboard");
     return (
     <div>
         <div className="teacher-info">
+            {/* <img
+        onClick={cancel}
+        src="/src/assets/cross.png"
+        className="h-[12px] absolute right-[15px] top-[25px] cursor-pointer"
+        alt="Cancel"
+        /> */}
             <div className="avatar flex flex-col justify-center items-center h-[600px]">
                 <img src="/src/assets/Avatar.png" alt="avatar" className='h-[182px] w-[182px]'/>
-                <span className='font-medium text-[24px]'>John Adams</span>
+                <span className='font-medium text-[24px]'>{user?.name}</span>
                 <span className='text-gray-600 text-[16px]'>Teacher, EXTC dept.</span>
             </div>
             <div className="qr flex flex-col justify-center items-center gap-[8px]">
