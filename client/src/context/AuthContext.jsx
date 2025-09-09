@@ -6,14 +6,14 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
 
   // Base URL for API calls - you can customize later
-  const baseurl = "http://localhost:3000";
+  const baseurl = "https://csi-attendance-web-s1yf.onrender.com";
 
   // Login function to save user and accessToken
   const login = (userData, accessToken) => {
     setUser(userData);
     localStorage.setItem("accessToken", accessToken);
-    console.log(userData);
-    
+    localStorage.setItem("userData", JSON.stringify(userData));
+    // console.log(userData);
   };
 
   const logout = () => {
@@ -23,7 +23,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, baseurl }}>
+    <AuthContext.Provider value={{ user, login, logout, baseurl ,setUser}}>
       {children}
     </AuthContext.Provider>
   );

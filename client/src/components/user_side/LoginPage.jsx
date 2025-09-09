@@ -31,6 +31,12 @@ export const LoginPage = () => {
 
   const handleGoogleLogin = () => {
     // Placeholder for Google login logic
+      const login = (userData, accessToken) => {
+    setUser(userData);
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("userData", JSON.stringify(userData));
+    console.log(userData);
+  };
     navigate("/Teacherinfo");
   };
 
