@@ -32,7 +32,7 @@ function App() {
                     <Route path="/GenerateQr" element={<QRGenrator_G/>} /> 
                 </Routes>
             </AnimatePresence> */}
-            <EmployeeLayout />
+            {/* <EmployeeLayout /> */}
             <AttendanceRecordLayout />
 
 
