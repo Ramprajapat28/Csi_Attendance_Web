@@ -12,12 +12,14 @@ import { LoginPage } from "./components/user_side/LoginPage";
 import LoginPage_G from "./components/Guard_side/LoginPage_G";
 import QRGenrator_G from "./components/Guard_side/QRGenrator_G";
 // import { QRCodeSVG } from 'qrcode.react';
+import EmployeeLayout from "./components/Admin_side/EmployeeLayout";
+import { AttendanceRecordLayout } from "./components/Admin_side/AttendanceRecordLayout";
 
 function App() {
     const location = useLocation();
     return (
         <>
-            <AnimatePresence mode="wait">
+            {/* <AnimatePresence mode="wait">
                 <Routes location={location} key={location.pathname}>
                     <Route path="/" element={<LoginPage />} />
                     <Route path="/Teacherinfo" element={<TeacherInfo />} />
@@ -29,8 +31,11 @@ function App() {
                     <Route path="/" element={<LoginPage_G/>} />
                     <Route path="/GenerateQr" element={<QRGenrator_G/>} /> 
                 </Routes>
-            </AnimatePresence>
-            
+            </AnimatePresence> */}
+            <EmployeeLayout />
+            <AttendanceRecordLayout />
+
+
         </>
     );
 }
