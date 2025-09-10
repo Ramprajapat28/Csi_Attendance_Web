@@ -14,6 +14,7 @@ import QRGenrator_G from "./components/Guard_side/QRGenrator_G";
 // import { QRCodeSVG } from 'qrcode.react';
 import EmployeeLayout from "./components/Admin_side/EmployeeLayout";
 import { AttendanceRecordLayout } from "./components/Admin_side/AttendanceRecordLayout";
+import { Admin_Navbar } from "./components/Admin_side/Admin_Navbar";
 
 function App() {
     const location = useLocation();
@@ -33,6 +34,7 @@ function App() {
                 </Routes>
             </AnimatePresence> */}
             {/* <EmployeeLayout /> */}
+            <Admin_Navbar />
             <AttendanceRecordLayout />
 
 
