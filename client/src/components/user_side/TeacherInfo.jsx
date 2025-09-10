@@ -11,6 +11,7 @@ const TeacherInfo = () => {
       console.log(user);
     }
   }, [user]);
+  const Dashboard = () => navigate("/dashboard");
   const navigate = useNavigate();
   const hidden = () => {
     navigate("/ScanQR");
@@ -46,7 +47,7 @@ const TeacherInfo = () => {
             Scan QR{" "}
             <img src="/src/assets/Vector.png" className="h-[20px]" alt="" />
           </button>
-          <button className="flex justify-center items-center rounded-lg text-sm font-medium border-[1px] border-slate-200 w-full h-[48px]">
+          <button onClick={Dashboard} className="flex justify-center items-center rounded-lg text-sm font-medium border-[1px] border-slate-200 w-full h-[48px]">
             View Previous Attendance
           </button>
         </div>

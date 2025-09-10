@@ -3,10 +3,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
 const AnimationPage = () => {
+  const user = JSON.parse(localStorage.getItem("userData"));
   const navigate = useNavigate();
   const hidden3 = () => {
     navigate("/Dashboard");
   };
+
+  
 
   const [step, setStep] = useState("logoOnly");
 
@@ -103,10 +106,10 @@ const AnimationPage = () => {
                   <span className="font-semibold">Details:</span>
                   <div className="info flex flex-col justify-center items-center h-[410px] border-slate-300 border-[1px] rounded-2xl shadow-md bg-white">
                     {[
-                      ["Name", "John Smith"],
-                      ["Employee ID", "EMP0234"],
+                      ["Name",user?.name || "N/A"],
+                      ["Employee ID", user?.id || "N/A"],
                       ["Department", "EXTC"],
-                      ["Date", "05/07/2025"],
+                      ["Date", new Date().toLocaleDateString()],
                     ].map(([label, value], i) => (
                       <motion.div
                         key={i}
@@ -131,13 +134,13 @@ const AnimationPage = () => {
                         <span className="text-sm font-semibold">
                           Check-in time
                         </span>
-                        <span className="text-xs text-gray-500">08:45</span>
+                        <span className="text-xs text-gray-500">9:40 AM</span>
                       </div>
                       <div className="checkOut flex flex-col gap-[12px]">
                         <span className="text-sm font-semibold">
                           Check-out time
                         </span>
-                        <span className="text-xs text-gray-500">--</span>
+                        <span className="text-xs text-gray-500">---</span>
                       </div>
                     </motion.div>
                   </div>

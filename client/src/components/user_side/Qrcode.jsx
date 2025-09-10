@@ -88,7 +88,7 @@ const Qrcode = () => {
           .then(() => setScannerRunning(true))
           .catch(() => alert("Failed to start scanner"));
       })
-      .catch(() => alert("Camera access denied"));
+      // .catch(() => alert("Camera access denied"));
 
     return () => {
       if (html5QrCodeRef.current && scannerRunning) {

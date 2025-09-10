@@ -19,11 +19,9 @@ const userSchema = new mongoose.Schema({
   },
  institute: {
     type: String,
-    required: true
   },
  department : {
     type: String,
-    required: true
   }
   ,
   role: {
@@ -38,6 +36,11 @@ const userSchema = new mongoose.Schema({
       return this.role === "user";
     },
   },
+  lastActivity:{
+    type: Boolean,
+    default: false,
+  },
+
   deviceInfo: {
     deviceId: String,
     deviceType: String,
