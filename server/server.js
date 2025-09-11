@@ -6,6 +6,8 @@ const ScheduleAttendanceCheck = require("./utils/timeRefresher");
 const compression = require('compression');
 const helmet = require("helmet");
 const morgan = require('morgan'); 
+const logger = require('./utils/logger'); 
+
 // const mongoSanitize = require('express-mongo-sanitize');
 const app = express();
 app.use(helmet());
