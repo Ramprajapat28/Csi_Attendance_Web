@@ -14,7 +14,7 @@ const records = async (req, res) => {
     }
     const attendanceRecords = await Attendance.find({ organizationId: orgId })
       .populate("userId", "name email")
-      .sort({ timestamp: -1 });
+      .sort({ createdAt: -1 });
     res.json({ attendanceRecords });
   } catch (error) {
     console.error("Error getting records:", error);
@@ -54,23 +54,33 @@ const getTodaysAttendance = async (req, res) => {
         .status(400)
         .json({ message: "User not associated with any organization" });
     }
-    
+
     const now = new Date();
     const istOffset = 5.5 * 60 * 60 * 1000; // +5:30 hrs
     const istNow = new Date(now.getTime() + istOffset);
 
-    const startOfDayIST = new Date(Date.UTC(
-      istNow.getUTCFullYear(),
-      istNow.getUTCMonth(),
-      istNow.getUTCDate(),
-      0, 0, 0, 0
-    ));
-    const endOfDayIST = new Date(Date.UTC(
-      istNow.getUTCFullYear(),
-      istNow.getUTCMonth(),
-      istNow.getUTCDate(),
-      23, 59, 59, 999
-    ));
+    const startOfDayIST = new Date(
+      Date.UTC(
+        istNow.getUTCFullYear(),
+        istNow.getUTCMonth(),
+        istNow.getUTCDate(),
+        0,
+        0,
+        0,
+        0
+      )
+    );
+    const endOfDayIST = new Date(
+      Date.UTC(
+        istNow.getUTCFullYear(),
+        istNow.getUTCMonth(),
+        istNow.getUTCDate(),
+        23,
+        59,
+        59,
+        999
+      )
+    );
 
     // Fetch records
     const records = await Attendance.find({
@@ -79,7 +89,7 @@ const getTodaysAttendance = async (req, res) => {
     }).populate("userId", "name email");
 
     // Add IST time to response
-    const formatted = records.map(record => {
+    const formatted = records.map((record) => {
       const obj = record.toObject();
       obj.timeIST = new Date(record.createdAt.getTime() + istOffset);
       return obj;
