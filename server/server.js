@@ -5,11 +5,11 @@ const customCors = require("./config/cors");
 const ScheduleAttendanceCheck = require("./utils/timeRefresher");
 const compression = require('compression');
 const helmet = require("helmet");
-const mongoSanitize = require('express-mongo-sanitize');
+// const mongoSanitize = require('express-mongo-sanitize');
 const app = express();
 app.use(helmet());
 app.use(compression());
-app.use(mongoSanitize({ replaceWith: '_removed' }));
+// app.use(mongoSanitize({ replaceWith: '_removed' }));
 
 // 🔥 NEW: Global error handling
 process.on("uncaughtException", (err) => {
