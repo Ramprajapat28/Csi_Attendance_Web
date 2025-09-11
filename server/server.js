@@ -9,7 +9,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const app = express();
 app.use(helmet());
 app.use(compression());
-app.use(mongoSanitize());
+app.use(mongoSanitize({ replaceWith: '_removed' }));
 
 // 🔥 NEW: Global error handling
 process.on("uncaughtException", (err) => {
