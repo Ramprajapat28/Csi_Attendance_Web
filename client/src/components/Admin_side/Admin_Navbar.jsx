@@ -1,10 +1,42 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useAuth } from "../../context/AuthContext";
 import { Search } from "lucide-react";
 
 export const Admin_Navbar = () => {
+  const { activeAdminView, setAdminView } = useAuth();
+
+  // Effect to sync radio buttons with activeAdminView on load and update
+  useEffect(() => {
+    const navIds = ["nav-home", "nav-employees", "nav-records", "nav-reports", "nav-qr"];
+    navIds.forEach((id) => {
+      const radio = document.getElementById(id);
+      if (radio) {
+        // Check the radio button if it matches current activeAdminView
+        if (id === "nav-home" && (activeAdminView === "home" || !activeAdminView)) {
+          radio.checked = true;
+        } else if (id === "nav-employees" && activeAdminView === "employees") {
+          radio.checked = true;
+        } else if (id === "nav-records" && activeAdminView === "records") {
+          radio.checked = true;
+        } else if (id === "nav-reports" && activeAdminView === "reports") {
+          radio.checked = true;
+        } else if (id === "nav-qr" && (activeAdminView === "qr" || activeAdminView === "qrcodes")) {
+          radio.checked = true;
+        } else {
+          radio.checked = false;
+        }
+      }
+    });
+  }, [activeAdminView]);
+
+  // Handler when a nav item is clicked
+  const handleNavChange = (view) => {
+    setAdminView(view);
+  };
+
   return (
     <div>
-       <div className="navbar bg-base-200 shadow-sm flex justify-around px-[104px] py-[24px]">
+      <div className="navbar bg-base-200 shadow-sm flex justify-around px-[104px] py-[24px]">
         <a className="btn btn-ghost text-xl w-[231px] h-[44px]">
           <img src="/src/assets/logo.svg" alt="" />
         </a>
@@ -40,7 +72,6 @@ export const Admin_Navbar = () => {
               <a>Logout</a>
             </li>
           </ul>
-          {/* </div> */}
         </div>
       </div>
 
@@ -53,7 +84,7 @@ export const Admin_Navbar = () => {
               name="nav-menu"
               id="nav-home"
               className="hidden peer"
-              defaultChecked
+              onChange={() => handleNavChange("home")}
             />
             <label
               htmlFor="nav-home"
@@ -70,6 +101,7 @@ export const Admin_Navbar = () => {
               name="nav-menu"
               id="nav-employees"
               className="hidden peer"
+              onChange={() => handleNavChange("employees")}
             />
             <label
               htmlFor="nav-employees"
@@ -86,6 +118,7 @@ export const Admin_Navbar = () => {
               name="nav-menu"
               id="nav-records"
               className="hidden peer"
+              onChange={() => handleNavChange("records")}
             />
             <label
               htmlFor="nav-records"
@@ -102,6 +135,7 @@ export const Admin_Navbar = () => {
               name="nav-menu"
               id="nav-reports"
               className="hidden peer"
+              onChange={() => handleNavChange("reports")}
             />
             <label
               htmlFor="nav-reports"
@@ -118,6 +152,7 @@ export const Admin_Navbar = () => {
               name="nav-menu"
               id="nav-qr"
               className="hidden peer"
+              onChange={() => handleNavChange("qr")}
             />
             <label
               htmlFor="nav-qr"

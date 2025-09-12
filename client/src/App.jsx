@@ -16,35 +16,30 @@ import EmployeeLayout from "./components/Admin_side/EmployeeLayout";
 import { AttendanceRecordLayout } from "./components/Admin_side/AttendanceRecordLayout";
 import { Admin_Navbar } from "./components/Admin_side/Admin_Navbar";
 import "cally";
-
+import AdminHome from "./components/Admin_side/AdminHome";
 
 function App() {
-    const location = useLocation();
-    return (
-        <>
-        <div className="min-h-screen bg-base-200   ">
-
-            {/* <AnimatePresence mode="wait">
-                <Routes location={location} key={location.pathname}>
-                <Route path="/" element={<LoginPage />} />
-                <Route path="/Teacherinfo" element={<TeacherInfo />} />
-                <Route path="/scanQR" element={<Qrcode />} />
-                <Route path="/" element={<TeacherInfo />} />
-                <Route path="/Complete" element={<AnimationPage />} />
-                <Route path="/ShowLogOut" element={<Logout />} />
-                <Route path="/Dashboard" element={<Dashboad />} />
-                <Route path="/" element={<LoginPage_G/>} />
-                <Route path="/GenerateQr" element={<QRGenrator_G/>} /> 
-                </Routes>
-                </AnimatePresence> */}
-            {/* <EmployeeLayout /> */}
-            <Admin_Navbar />
-            <AttendanceRecordLayout />
-
-                </div>
-
-        </>
-    );
+  const location = useLocation();
+  return (
+    <>
+      <div className="min-h-screen bg-base-200   ">
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+            <Route path="/" element={<LoginPage />} />
+            <Route path="/Teacherinfo" element={<TeacherInfo />} />
+            <Route path="/scanQR" element={<Qrcode />} />
+            <Route path="/" element={<TeacherInfo />} />
+            <Route path="/Complete" element={<AnimationPage />} />
+            <Route path="/ShowLogOut" element={<Logout />} />
+            <Route path="/Dashboard" element={<Dashboad />} />
+            {/* <Route path="/" element={<LoginPage_G />} />
+            <Route path="/GenerateQr" element={<QRGenrator_G />} /> */}
+            <Route path="/admin" element={<AdminHome />} />
+          </Routes>
+        </AnimatePresence>
+      </div>
+    </>
+  );
 }
 
 export default App;
