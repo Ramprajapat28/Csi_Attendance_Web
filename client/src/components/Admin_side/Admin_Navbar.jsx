@@ -35,10 +35,10 @@ export const Admin_Navbar = () => {
   };
 
   return (
-    <div>
-      <div className="navbar bg-base-200 shadow-sm flex justify-around px-[104px] py-[24px]">
-        <a className="btn btn-ghost text-xl w-[231px] h-[44px]">
-          <img src="/src/assets/logo.svg" alt="" />
+    <div className="">
+      <div className="navbar bg-base-200 shadow-sm flex justify-around px-[104px] py-[24px] h-[114px]">
+        <a className="">
+          <img className=" w-[231px] h-[44px]" src="/src/assets/logo.svg" alt="" />
         </a>
         <input
           type="text"
@@ -75,8 +75,8 @@ export const Admin_Navbar = () => {
         </div>
       </div>
 
-      <div className="bg-white navbar-center hidden lg:flex justify-center border border-t-[1px] border-b-[1px] border-l-0 border-r-0 border-gray-300 w-full h-[72px]">
-        <ul className="menu menu-horizontal px-1 gap-[64px]">
+      <div className="bg-white navbar-center hidden lg:flex justify-center border border-t-[1px] border-b-[1px] border-l-0 border-r-0 border-gray-300 w-full">
+        <ul className="menu menu-horizontal px-1 py-[24px] gap-[64px]">
           {/* Home */}
           <li>
             <input

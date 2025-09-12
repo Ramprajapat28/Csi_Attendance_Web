@@ -3,181 +3,226 @@ import { Admin_Navbar } from "./Admin_Navbar";
 import EmployeeLayout from "./EmployeeLayout";
 import { AttendanceRecordLayout } from "./AttendanceRecordLayout";
 import { useAuth } from "../../context/AuthContext";
-import {
-  Users,
-  FileText,
-  BarChart3,
-  QrCode,
-  Home,
-  TrendingUp,
-  Clock,
-  UserCheck,
-} from "lucide-react";
+import { Users, FileText, BarChart3, QrCode, Home, TrendingUp, Clock, UserCheck } from "lucide-react";
 
 const AdminHome = () => {
-  const { activeAdminView, setAdminView } = useAuth();
+    const { activeAdminView, setAdminView } = useAuth();
 
-  // Dashboard component for home view
-  const Dashboard = () => (
-    <div className="p-6 w-[100vw]">
-      <h1 className="text-2xl font-bold mb-6">Admin Dashboard</h1>
+    // Dashboard component for home view
+    const Dashboard = () => (
+        <div className="h-6 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+            <div className="p-6 w-[100vw]">
+                {/* <h1 className="text-2xl font-bold mb-6"></h1> */}
+                <div className="flex gap-[20px] justify-center w-[100vw]">
+                    <div className="border-[1px] border-[#00000033] rounded-[10px] px-[24px] py-[40px] bg-red-50 w-[431px] h-[367px]">
+                        <div className="flex flex-col justify-between h-full">
+                            <div className="flex gap-[px] flex-col">
+                                <div className="text-[16px] font-medium text-black">System Status:</div>
+                                <div className="flex align-center gap-[10px]">
+                                    <div className=" font-medium flex gap-[16px]"><div className="text-[56px] leading-none">
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white p-6 rounded-lg shadow">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">
-                Total Employees
-              </p>
-              <p className="text-3xl font-bold">248</p>
+                                        Active
+                                    </div>
+                                        <p className="h-[20px] w-[20px] mr-0 my-auto inset-0 bg-[#01AB06] rounded-4xl"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex gap-[px] flex-col">
+                                <div className="stat-desc text-[32px] font-medium text-black">12:24:03 A.M.</div>
+                                <div className="stat-time text-[16px] font-medium text-[#6C7278]">01/01/2025</div>
+                            </div>
+                            <div className="flex gap-[px] flex-col">
+                                <div className="stat-desc text-[24px] font-medium">Users:</div>
+                                <div className="stat-desc text-[16px] font-medium text-black">22 Sessions Active</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex gap-[20px] flex-col">
+                        <div className="flex gap-[20px]">
+                            <div className="stats border-[1px] bg-white border-[#00000033] rounded-[10px] px-[23px] py-[29px] w-[270.67px] h-[173.5px]">
+                                <div className="flex justify-between w-full">
+                                    <div className="flex flex-col">
+                                        <div className="justify-between h-full flex flex-col">
+                                            <p className="text-[32px] font-bold">125</p>
+                                            <p className="text-[16px] font-semibold text-[#1A1C1E]">Total Employees</p>
+                                        </div>
+                                        <div className="flex gap-[8px]">
+                                            <img className="h-[24px]" src="src/assets/add_green.svg" alt="" />
+                                            <p className="text-[14px] text-[#01AB06] font-medium">12 Added Today</p>
+                                        </div>
+                                    </div>
+                                <img className="h-[40px]" src="src/assets/Total Employees Icon.svg" alt="" />
+                                </div>
+                            </div>
+
+                            <div className="stats border-[1px] bg-white border-[#00000033] rounded-[10px] px-[23px] py-[29px] w-[270.67px] h-[173.5px]">
+                                <div className="flex justify-between w-full">
+                                    <div className="flex flex-col">
+                                        <div className="justify-between h-full flex flex-col">
+                                            <p className="text-[32px] font-bold">110</p>
+                                            <p className="text-[16px] font-semibold text-[#1A1C1E]">On Time</p>
+                                        </div>
+                                        <div className="flex gap-[8px]">
+                                            <img className="h-[24px]" src="src/assets/grow_green.svg" alt="" />
+                                            <p className="text-[14px] text-[#01AB06] font-medium">15 more than yesterday</p>
+                                        </div>
+                                    </div>
+                                <img className="h-[40px]" src="src/assets/Currently Ongoing Icon.svg" alt="" />
+                                </div>
+                            </div>
+
+                            <div className="stats border-[1px] bg-white border-[#00000033] rounded-[10px] px-[23px] py-[29px] w-[270.67px] h-[173.5px]">
+                                <div className="flex justify-between w-full">
+                                    <div className="flex flex-col">
+                                        <div className="justify-between h-full flex flex-col">
+                                            <p className="text-[32px] font-bold">5</p>
+                                            <p className="text-[16px] font-semibold text-[#1A1C1E]">Absent</p>
+                                        </div>
+                                        <div className="flex gap-[8px]">
+                                            <img className="h-[24px]" src="src/assets/fall_red.svg" alt="" />
+                                            <p className="text-[14px] text-[#AB0101] font-medium">2 more than yesterday</p>
+                                        </div>
+                                    </div>
+                                <img className="h-[40px]" src="src/assets/Absent Icon.svg" alt="" />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex gap-[20px] ">
+                            <div className="stats border-[1px] bg-white border-[#00000033] rounded-[10px] px-[23px] py-[29px] w-[270.67px] h-[173.5px]">
+                                <div className="flex justify-between w-full">
+                                    <div className="flex flex-col">
+                                        <div className="justify-between h-full flex flex-col">
+                                            <p className="text-[32px] font-bold">8</p>
+                                            <p className="text-[16px] font-semibold text-[#1A1C1E]">Late Arrival</p>
+                                        </div>
+                                        <div className="flex gap-[8px]">
+                                            <img className="h-[24px]" src="src/assets/grow_green.svg" alt="" />
+                                            <p className="text-[14px] text-[#01AB06] font-medium">4 less than yesterday</p>
+                                        </div>
+                                    </div>
+                                <img className="h-[40px]" src="src/assets/Late Arrivals Icon.svg" alt="" />
+                                </div>
+                            </div>
+
+                            <div className="stats border-[1px] bg-white border-[#00000033] rounded-[10px] px-[23px] py-[29px] w-[270.67px] h-[173.5px]">
+                                <div className="flex justify-between w-full">
+                                    <div className="flex flex-col">
+                                        <div className="justify-between h-full flex flex-col">
+                                            <p className="text-[32px] font-bold">2</p>
+                                            <p className="text-[16px] font-semibold text-[#1A1C1E]">Early Departures</p>
+                                        </div>
+                                        <div className="flex gap-[8px]">
+                                            <img className="h-[24px]" src="src/assets/grow_green.svg" alt="" />
+                                            <p className="text-[14px] text-[#01AB06] font-medium">2 less than yesterday</p>
+                                        </div>
+                                    </div>
+                                <img className="h-[40px]" src="src/assets/Early Departure Icon.svg" alt="" />
+                                </div>
+                            </div>
+
+                            <div className="stats border-[1px] bg-white border-[#00000033] rounded-[10px] px-[23px] py-[29px] w-[270.67px] h-[173.5px]">
+                                <div className="flex justify-between w-full">
+                                    <div className="flex flex-col">
+                                        <div className="justify-between h-full flex flex-col">
+                                            <p className="text-[32px] font-bold">24</p>
+                                            <p className="text-[16px] font-semibold text-[#1A1C1E]">Time Off</p>
+                                        </div>
+                                        <div className="flex gap-[8px]">
+                                            <img className="h-[24px]" src="src/assets/grow_blue.svg" alt="" />
+                                            <p className="text-[14px] text-[#1D61E7] font-medium">2 less than yesterday</p>
+                                        </div>
+                                    </div>
+                                <img className="h-[40px]" src="src/assets/Time off icon.svg" alt="" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="bg-white p-6 rounded-lg shadow">
+                    <h2 className="text-lg font-semibold mb-4">Quick Actions</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <button onClick={() => setAdminView("qrcodes")} className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 transition-colors">
+                            <QrCode className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+                            <p className="text-sm">Generate QR codes for attendance tracking and access control</p>
+                        </button>
+                        <button onClick={() => setAdminView("employees")} className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 transition-colors">
+                            <Users className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+                            <p className="text-sm">Manage employee information and profiles</p>
+                        </button>
+                        <button onClick={() => setAdminView("reports")} className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 transition-colors">
+                            <FileText className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+                            <p className="text-sm">View detailed attendance reports and analytics</p>
+                        </button>
+                    </div>
+                </div>
             </div>
-            <Users className="h-8 w-8 text-blue-500" />
-          </div>
         </div>
+    );
 
-        <div className="bg-white p-6 rounded-lg shadow">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">
-                Today's Attendance
-              </p>
-              <p className="text-3xl font-bold">189</p>
+    // QR Code Generator View
+    const QRCodeView = () => (
+        <div className="p-6  w-[100vw]">
+            <h1 className="text-2xl font-bold mb-6">QR Code Management</h1>
+            <div className="bg-white p-6 rounded-lg shadow">
+                <h2 className="text-lg font-semibold mb-4">Generate QR Codes</h2>
+                <div className="space-y-4">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">QR Code Type</label>
+                        <select className="w-full p-2 border border-gray-300 rounded-md">
+                            <option>Check-in QR Code</option>
+                            <option>Check-out QR Code</option>
+                            <option>Event QR Code</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Location/Event Name</label>
+                        <input type="text" placeholder="Enter location or event name" className="w-full p-2 border border-gray-300 rounded-md" />
+                    </div>
+                    <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Generate QR Code</button>
+                </div>
             </div>
-            <UserCheck className="h-8 w-8 text-green-500" />
-          </div>
         </div>
+    );
 
-        <div className="bg-white p-6 rounded-lg shadow">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">
-                Attendance Rate
-              </p>
-              <p className="text-3xl font-bold">76%</p>
-            </div>
-            <TrendingUp className="h-8 w-8 text-purple-500" />
-          </div>
+    // Reports View (using your existing AttendanceRecordLayout)
+    const ReportsView = () => (
+        <div className="p-6">
+            <h1 className="text-2xl font-bold mb-6">Attendance Reports</h1>
+            <AttendanceRecordLayout />
         </div>
+    );
 
-        <div className="bg-white p-6 rounded-lg shadow">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">
-                QR Scans Today
-              </p>
-              <p className="text-3xl font-bold">342</p>
-            </div>
-            <QrCode className="h-8 w-8 text-orange-500" />
-          </div>
+    // Employees View (using your existing EmployeeLayout)
+    const EmployeesView = () => (
+        <div className="overflow-x-hidden min-h-[100vh]">
+            <h1 className="text-2xl font-bold mb-6">Employee Management</h1>
+            <EmployeeLayout />
         </div>
-      </div>
+    );
 
-      <div className="bg-white p-6 rounded-lg shadow">
-        <h2 className="text-lg font-semibold mb-4">Quick Actions</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <button
-            onClick={() => setAdminView("qrcodes")}
-            className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 transition-colors"
-          >
-            <QrCode className="h-8 w-8 mx-auto mb-2 text-gray-400" />
-            <p className="text-sm">
-              Generate QR codes for attendance tracking and access control
-            </p>
-          </button>
-          <button
-            onClick={() => setAdminView("employees")}
-            className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 transition-colors"
-          >
-            <Users className="h-8 w-8 mx-auto mb-2 text-gray-400" />
-            <p className="text-sm">Manage employee information and profiles</p>
-          </button>
-          <button
-            onClick={() => setAdminView("reports")}
-            className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 transition-colors"
-          >
-            <FileText className="h-8 w-8 mx-auto mb-2 text-gray-400" />
-            <p className="text-sm">
-              View detailed attendance reports and analytics
-            </p>
-          </button>
+    // Main render function with proper conditional rendering
+    const renderContent = () => {
+        switch (activeAdminView) {
+            case "home":
+                return <Dashboard />;
+            case "employees":
+                return <EmployeesView />;
+            case "reports":
+                return <ReportsView />;
+            case "qrcodes":
+                return <QRCodeView />;
+            default:
+                return <Dashboard />;
+        }
+    };
+
+    return (
+        <div className="min-h-screen bg-gray-50">
+            <Admin_Navbar />
+            {renderContent()}
         </div>
-      </div>
-    </div>
-  );
-
-  // QR Code Generator View
-  const QRCodeView = () => (
-    <div className="p-6  w-[100vw]">
-      <h1 className="text-2xl font-bold mb-6">QR Code Management</h1>
-      <div className="bg-white p-6 rounded-lg shadow">
-        <h2 className="text-lg font-semibold mb-4">Generate QR Codes</h2>
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              QR Code Type
-            </label>
-            <select className="w-full p-2 border border-gray-300 rounded-md">
-              <option>Check-in QR Code</option>
-              <option>Check-out QR Code</option>
-              <option>Event QR Code</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Location/Event Name
-            </label>
-            <input
-              type="text"
-              placeholder="Enter location or event name"
-              className="w-full p-2 border border-gray-300 rounded-md"
-            />
-          </div>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
-            Generate QR Code
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-
-  // Reports View (using your existing AttendanceRecordLayout)
-  const ReportsView = () => (
-    <div className="p-6  w-[100vw]">
-      <h1 className="text-2xl font-bold mb-6">Attendance Reports</h1>
-      <AttendanceRecordLayout />
-    </div>
-  );
-
-  // Employees View (using your existing EmployeeLayout)
-  const EmployeesView = () => (
-    <div className="w-[100vw] overflow-x-hidden min-h-[100vh] p-3">
-      <h1 className="text-2xl font-bold mb-6">Employee Management</h1>
-      <EmployeeLayout />
-    </div>
-  );
-
-  // Main render function with proper conditional rendering
-  const renderContent = () => {
-    switch (activeAdminView) {
-      case "home":
-        return <Dashboard />;
-      case "employees":
-        return <EmployeesView />;
-      case "reports":
-        return <ReportsView />;
-      case "qrcodes":
-        return <QRCodeView />;
-      default:
-        return <Dashboard />;
-    }
-  };
-
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <Admin_Navbar />
-      {renderContent()}
-    </div>
-  );
+    );
 };
 
 export default AdminHome;

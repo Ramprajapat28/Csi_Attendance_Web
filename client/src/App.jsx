@@ -22,7 +22,7 @@ function App() {
   const location = useLocation();
   return (
     <>
-      <div className="min-h-screen bg-base-200   ">
+      <div className="min-h-screen bg-base-200 ">
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={<LoginPage />} />

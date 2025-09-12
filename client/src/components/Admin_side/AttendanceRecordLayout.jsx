@@ -31,7 +31,7 @@ export const AttendanceRecordLayout = () => {
   }, []);
 
   return (
-    <div className="my-[331px] mx-[104px] bg-wihte  h-max border-1 px-[24px] py-[16px] border-[#6C727833] rounded-[20px] flex flex-col gap-[32px]">
+    <div className="my-[100px] mx-[104px] bg-wihte  h-max border-1 px-[24px] py-[16px] border-[#6C727833] rounded-[20px] flex flex-col gap-[32px]">
       <div className="flex justify-between items-center h-[86px] px-[24px] py-[16px] ">
         <div className="flex justify-center gap-[24px]">
           <h2 className="font-bold text-[24px]">Attendance record</h2>
