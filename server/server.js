@@ -7,6 +7,8 @@ const compression = require('compression');
 const helmet = require("helmet");
 const morgan = require('morgan'); 
 const logger = require('./utils/logger'); 
+const bulkUserRoutes = require("./routes/bulkUser.routes");
+
 
 // const mongoSanitize = require('express-mongo-sanitize');
 const app = express();
@@ -21,10 +23,7 @@ app.use(morgan('tiny', {
   }
 }));
 
-// Root
-app.get('/', (req, res) => {
-  res.send('Hello from Express + Winston');
-});
+
 
 // Error handler
 app.use((err, req, res, next) => {
@@ -71,6 +70,7 @@ app.use("/qrcode", qrcodeRoutes);
 app.use("/attend", attendanceRoutes);
 app.use("/admin", adminRoutes);
 app.use("/password", passwordResetRoutes);
+app.use("/bulk", bulkUserRoutes);
 
 // Health check endpoint
 app.get("/", (req, res) => {
