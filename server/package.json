@@ -35,11 +35,8 @@
     "nodemailer": "^7.0.6",
     "nodemon": "^3.1.10",
     "qrcode": "^1.5.4",
-<<<<<<< HEAD
-    "xlsx": "^0.18.5"
-=======
+    "xlsx": "^0.18.5",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0"
->>>>>>> d6557c2a3fb0db6751b893b52b7af98a8dc73035
   }
 }
