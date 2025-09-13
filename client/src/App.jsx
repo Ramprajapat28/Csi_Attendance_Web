@@ -20,7 +20,7 @@ function App() {
     const location = useLocation();
     return (
         <>
-            {/* <AnimatePresence mode="wait">
+            <AnimatePresence>
                 <Routes location={location} key={location.pathname}>
                     <Route path="/" element={<LoginPage />} />
                     <Route path="/Teacherinfo" element={<TeacherInfo />} />
@@ -32,10 +32,10 @@ function App() {
                     <Route path="/" element={<LoginPage_G/>} />
                     <Route path="/GenerateQr" element={<QRGenrator_G/>} /> 
                 </Routes>
-            </AnimatePresence> */}
+            </AnimatePresence>
             {/* <EmployeeLayout /> */}
-            <Admin_Navbar />
-            <AttendanceRecordLayout />
+            {/* <Admin_Navbar />
+            <AttendanceRecordLayout /> */}
 
 
         </>
