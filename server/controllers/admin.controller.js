@@ -25,26 +25,128 @@ const records = async (req, res) => {
 const getOrganizationQRCodes = async (req, res) => {
   try {
     const orgId = req.user.organizationId;
+
     if (!orgId) {
-      return res
-        .status(400)
-        .json({ message: "User not associated with any organization" });
+      return res.status(400).json({
+        message: "User not associated with any organization",
+        error: "MISSING_ORGANIZATION",
+      });
     }
+
+    // Get organization with populated QR codes
     const org = await Organization.findById(orgId)
       .populate("checkInQRCodeId")
       .populate("checkOutQRCodeId");
+
+    if (!org) {
+      return res.status(404).json({
+        message: "Organization not found",
+        error: "ORG_NOT_FOUND",
+      });
+    }
+
+    // Format response with complete QR code data
+    const response = {
+      organizationName: org.name,
+      organizationId: org._id,
+      qrCodes: {
+        checkIn: org.checkInQRCodeId
+          ? {
+              id: org.checkInQRCodeId._id,
+              code: org.checkInQRCodeId.code,
+              type: org.checkInQRCodeId.qrType,
+              qrImage: org.checkInQRCodeId.qrImageData,
+              active: org.checkInQRCodeId.active,
+              usageCount: org.checkInQRCodeId.usageCount,
+              createdAt: org.checkInQRCodeId.createdAt,
+              createdAtIST: org.checkInQRCodeId.createdAtIST,
+            }
+          : null,
+        checkOut: org.checkOutQRCodeId
+          ? {
+              id: org.checkOutQRCodeId._id,
+              code: org.checkOutQRCodeId.code,
+              type: org.checkOutQRCodeId.qrType,
+              qrImage: org.checkOutQRCodeId.qrImageData,
+              active: org.checkOutQRCodeId.active,
+              usageCount: org.checkOutQRCodeId.usageCount,
+              createdAt: org.checkOutQRCodeId.createdAt,
+              createdAtIST: org.checkOutQRCodeId.createdAtIST,
+            }
+          : null,
+      },
+      settings: {
+        qrCodeValidityMinutes: org.settings?.qrCodeValidityMinutes || 30,
+        locationToleranceMeters: org.settings?.locationToleranceMeters || 50,
+      },
+      lastUpdated: new Date().toISOString(),
+    };
+
+    res.json(response);
+  } catch (error) {
+    console.error("Error fetching organization's QR codes:", error);
+    res.status(500).json({
+      message: "Failed to fetch QR codes",
+      error:
+        process.env.NODE_ENV === "development"
+          ? error.message
+          : "Internal server error",
+    });
+  }
+};
+
+// New function to get QR code by type (check-in or check-out)
+const getQRCodeByType = async (req, res) => {
+  try {
+    const { type } = req.params; // 'check-in' or 'check-out'
+    const orgId = req.user.organizationId;
+
+    if (!orgId) {
+      return res.status(400).json({
+        message: "User not associated with any organization",
+      });
+    }
+
+    if (!["check-in", "check-out"].includes(type)) {
+      return res.status(400).json({
+        message: "Invalid QR type. Must be 'check-in' or 'check-out'",
+      });
+    }
+
+    const org = await Organization.findById(orgId).populate(
+      type === "check-in" ? "checkInQRCodeId" : "checkOutQRCodeId"
+    );
+
     if (!org) {
       return res.status(404).json({ message: "Organization not found" });
     }
+
+    const qrCode =
+      type === "check-in" ? org.checkInQRCodeId : org.checkOutQRCodeId;
+
+    if (!qrCode) {
+      return res.status(404).json({
+        message: `${type} QR code not found for organization`,
+      });
+    }
+
     res.json({
-      checkInQRCode: org.checkInQRCodeId,
-      checkOutQRCode: org.checkOutQRCodeId,
+      id: qrCode._id,
+      code: qrCode.code,
+      type: qrCode.qrType,
+      qrImage: qrCode.qrImageData,
+      active: qrCode.active,
+      usageCount: qrCode.usageCount,
+      organizationName: org.name,
+      createdAt: qrCode.createdAt,
+      createdAtIST: qrCode.createdAtIST,
     });
   } catch (error) {
-    console.error("Error fetching organization's QR codes:", error);
-    res.status(500).json({ message: "Failed to fetch QR codes" });
+    console.error(`Error fetching ${req.params.type} QR code:`, error);
+    res.status(500).json({ message: "Failed to fetch QR code" });
   }
 };
+
 
 const getTodaysAttendance = async (req, res) => {
   try {
@@ -148,4 +250,5 @@ module.exports = {
   getOrganizationQRCodes,
   getTodaysAttendance,
   deleteUser,
+  getQRCodeByType,
 };
