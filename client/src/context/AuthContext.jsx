@@ -9,7 +9,7 @@ export function AuthProvider({ children }) {
   const [activeAdminView, setActiveAdminView] = useState("home");
 
   // Base URL for API calls - you can customize later
-  const baseurl = "https://csi-attendance-web-s1yf.onrender.com";
+  const baseurl = "https://csi-attendance-web.onrender.com";
 
   // Login function to save user and accessToken
   const login = (userData, accessToken) => {

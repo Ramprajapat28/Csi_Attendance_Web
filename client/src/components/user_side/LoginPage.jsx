@@ -17,7 +17,14 @@ export const LoginPage = () => {
       const res = await axios.post(
         `${baseurl}/auth2/login`,
         { email, password },
-        { withCredentials: true }
+        {
+          withCredentials: true,
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          timeout: 10000, // Add timeout
+        }
       );
       if (res.data.accessToken) {
         login(res.data.user, res.data.accessToken);
@@ -31,12 +38,12 @@ export const LoginPage = () => {
 
   const handleGoogleLogin = () => {
     // Placeholder for Google login logic
-      const login = (userData, accessToken) => {
-    setUser(userData);
-    localStorage.setItem("accessToken", accessToken);
-    localStorage.setItem("userData", JSON.stringify(userData));
-    console.log(userData);
-  };
+    const login = (userData, accessToken) => {
+      setUser(userData);
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("userData", JSON.stringify(userData));
+      console.log(userData);
+    };
     navigate("/Teacherinfo");
   };
 
@@ -77,13 +84,15 @@ export const LoginPage = () => {
           <div className="w-full flex gap-2">
             <button
               type="submit"
-              className="flex justify-center items-center rounded-lg font-medium gap-3 bg-[#1D61E7] text-white w-full h-[48px] shadow-[0px_4px_4px_0px_#00000040] active:shadow-[0px_2px_1px_0px_#00000040] transition-all duration-100">
+              className="flex justify-center items-center rounded-lg font-medium gap-3 bg-[#1D61E7] text-white w-full h-[48px] shadow-[0px_4px_4px_0px_#00000040] active:shadow-[0px_2px_1px_0px_#00000040] transition-all duration-100"
+            >
               Login
             </button>
 
             <button
               onClick={handleGoogleLogin}
-              className="flex justify-center items-center gap-[10px] border border-[#EFF0F6] rounded-[100px] w-[48px]  h-[48px] shadow-[0px_4px_4px_0px_#00000040] active:shadow-[0px_2px_1px_0px_#00000040] transition-all duration-100">
+              className="flex justify-center items-center gap-[10px] border border-[#EFF0F6] rounded-[100px] w-[48px]  h-[48px] shadow-[0px_4px_4px_0px_#00000040] active:shadow-[0px_2px_1px_0px_#00000040] transition-all duration-100"
+            >
               <img
                 className="h-[25px] w-[27px] my-[2px] pt-[2px]"
                 src="src/assets/google.png"

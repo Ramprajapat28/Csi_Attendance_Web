@@ -6,9 +6,10 @@ const corsOptions = {
 
     const allowedOrigins = [
       "*",
+      "http://192.168.29.219:5173",
       // "http://localhost:3000",
       // "http://localhost:3001",
-      " https://csi-attendance-web-i3n1.onrender.com",
+      // " https://csi-attendance-web-i3n1.onrender.com",
       // "http://localhost:5000",
       // "http://127.0.0.1:3000",
       // "http://127.0.0.1:5000",
