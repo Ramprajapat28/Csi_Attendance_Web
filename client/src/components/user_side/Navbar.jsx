@@ -9,8 +9,8 @@ const Navbar = () => { //props
     return (
     <div>
         <div className="navbar w-screen h-[110px] flex justify-between items-end p-[16px] border-slate-200 border-b-[1px]">
-        <img src="/src/assets/logo.png" alt='atharva logo'/>
-        <img onClick={showlogout} src="/src/assets/Profile.png" alt="profile" className='h-[27px] w-[27px]'/>
+        <img src="/logo.png" alt='atharva logo'/>
+        <img onClick={showlogout} src="/Profile.png" alt="profile" className='h-[27px] w-[27px]'/>
         {/* <div>{props.name}</div> */}
         </div>
     </div>

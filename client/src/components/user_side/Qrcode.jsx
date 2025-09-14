@@ -215,7 +215,7 @@ const Qrcode = () => {
       {/* Close/Back Button */}
       <img
         onClick={goBack}
-        src="/src/assets/cross.png"
+        src="/cross.png"
         className="h-[12px] absolute right-[15px] top-[25px] cursor-pointer"
         alt="Back"
       />
@@ -243,7 +243,7 @@ const Qrcode = () => {
           >
             Check In
             <img
-              src="/src/assets/check.png"
+              src="/check.png"
               className="h-[15px] invert"
               alt="Check In"
             />
@@ -257,7 +257,7 @@ const Qrcode = () => {
           >
             Check Out
             <img
-              src="/src/assets/check.png"
+              src="/check.png"
               className="h-[15px] invert"
               alt="Check Out"
             />

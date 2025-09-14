@@ -1,5 +1,5 @@
 import React from "react";
-import { records } from "../../assets/records";
+import { records } from "../../../public/records";
 export const EmployeeAttendance = () => {
     console.log(records);
 
@@ -1025,12 +1025,12 @@ export const EmployeeAttendance = () => {
                                     3
                                 </button>
                                 <button type="button" className="p-2.5 min-w-10 inline-flex justify-center items-center gap-x-2 text-sm rounded-full text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none" aria-label="Previous">
-                                    <span aria-hidden="true"><img src="/src/assets/left.svg" alt="" /></span>
+                                    <span aria-hidden="true"><img src="/left.svg" alt="" /></span>
                                     <span className="sr-only">Previous</span>
                                 </button>
                                 <button type="button" className="p-2.5 min-w-10 inline-flex justify-center items-center gap-x-2 text-sm rounded-full text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none" aria-label="Next">
                                     <span className="sr-only">Next</span>
-                                    <span aria-hidden="true"><img src="/src/assets/right.svg" alt="" /></span>
+                                    <span aria-hidden="true"><img src="/right.svg" alt="" /></span>
                                 </button>
                             </nav>
                         </div>

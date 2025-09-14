@@ -14,8 +14,8 @@ const Dashbord = () => {
     <div className="h-6 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
       <div className="p-6 w-[100vw]">
         {/* <h1 className="text-2xl font-bold mb-6"></h1> */}
-        <div className="flex gap-[20px] justify-center w-[100vw]">
-          <div className="border-[1px] border-[#00000033] rounded-[10px] px-[24px] py-[40px] bg-red-50 w-[431px] h-[367px]">
+        <div className="flex gap-[20px] justify-center ">
+          <div className="border-[1px] border-[#00000033] rounded-[10px] px-[24px] py-[40px] bg-white w-[431px] h-[367px]">
             <div className="flex flex-col justify-between h-full">
               <div className="flex gap-[px] flex-col">
                 <div className="text-[16px] font-medium text-black">
@@ -58,7 +58,7 @@ const Dashbord = () => {
                     <div className="flex gap-[8px]">
                       <img
                         className="h-[24px]"
-                        src="src/assets/add_green.svg"
+                        src="/add_green.svg"
                         alt=""
                       />
                       <p className="text-[14px] text-[#01AB06] font-medium">
@@ -68,7 +68,7 @@ const Dashbord = () => {
                   </div>
                   <img
                     className="h-[40px]"
-                    src="src/assets/Total Employees Icon.svg"
+                    src="/Total Employees Icon.svg"
                     alt=""
                   />
                 </div>
@@ -86,7 +86,7 @@ const Dashbord = () => {
                     <div className="flex gap-[8px]">
                       <img
                         className="h-[24px]"
-                        src="src/assets/grow_green.svg"
+                        src="/grow_green.svg"
                         alt=""
                       />
                       <p className="text-[14px] text-[#01AB06] font-medium">
@@ -96,7 +96,7 @@ const Dashbord = () => {
                   </div>
                   <img
                     className="h-[40px]"
-                    src="src/assets/Currently Ongoing Icon.svg"
+                    src="/Currently Ongoing Icon.svg"
                     alt=""
                   />
                 </div>
@@ -114,7 +114,7 @@ const Dashbord = () => {
                     <div className="flex gap-[8px]">
                       <img
                         className="h-[24px]"
-                        src="src/assets/fall_red.svg"
+                        src="/fall_red.svg"
                         alt=""
                       />
                       <p className="text-[14px] text-[#AB0101] font-medium">
@@ -124,7 +124,7 @@ const Dashbord = () => {
                   </div>
                   <img
                     className="h-[40px]"
-                    src="src/assets/Absent Icon.svg"
+                    src="/Absent Icon.svg"
                     alt=""
                   />
                 </div>
@@ -143,7 +143,7 @@ const Dashbord = () => {
                     <div className="flex gap-[8px]">
                       <img
                         className="h-[24px]"
-                        src="src/assets/grow_green.svg"
+                        src="/grow_green.svg"
                         alt=""
                       />
                       <p className="text-[14px] text-[#01AB06] font-medium">
@@ -153,7 +153,7 @@ const Dashbord = () => {
                   </div>
                   <img
                     className="h-[40px]"
-                    src="src/assets/Late Arrivals Icon.svg"
+                    src="/Late Arrivals Icon.svg"
                     alt=""
                   />
                 </div>
@@ -171,7 +171,7 @@ const Dashbord = () => {
                     <div className="flex gap-[8px]">
                       <img
                         className="h-[24px]"
-                        src="src/assets/grow_green.svg"
+                        src="/grow_green.svg"
                         alt=""
                       />
                       <p className="text-[14px] text-[#01AB06] font-medium">
@@ -181,7 +181,7 @@ const Dashbord = () => {
                   </div>
                   <img
                     className="h-[40px]"
-                    src="src/assets/Early Departure Icon.svg"
+                    src="/Early Departure Icon.svg"
                     alt=""
                   />
                 </div>
@@ -199,7 +199,7 @@ const Dashbord = () => {
                     <div className="flex gap-[8px]">
                       <img
                         className="h-[24px]"
-                        src="src/assets/grow_blue.svg"
+                        src="/grow_blue.svg"
                         alt=""
                       />
                       <p className="text-[14px] text-[#1D61E7] font-medium">
@@ -209,7 +209,7 @@ const Dashbord = () => {
                   </div>
                   <img
                     className="h-[40px]"
-                    src="src/assets/Time off icon.svg"
+                    src="/Time off icon.svg"
                     alt=""
                   />
                 </div>
