@@ -1,55 +1,68 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  
-  // Add state for admin navigation
+  const [loading, setLoading] = useState(true);
   const [activeAdminView, setActiveAdminView] = useState("home");
 
-  // Base URL for API calls - you can customize later
-  // const baseurl = "https://csi-attendance-web.onrender.com";
-  const baseurl = "http://localhost:3000";
+  const baseurl = "https://csi-attendance-web.onrender.com";
 
-  // Login function to save user and accessToken
+  // Check for existing session on app load
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    const userData = localStorage.getItem("userData");
+
+    if (token && userData) {
+      try {
+        const parsedUser = JSON.parse(userData);
+        setUser(parsedUser);
+      } catch (error) {
+        console.error("Error parsing user data:", error);
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("userData");
+      }
+    }
+
+    setLoading(false);
+  }, []);
+
   const login = (userData, accessToken) => {
     setUser(userData);
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("userData", JSON.stringify(userData));
-    // console.log(userData);
   };
 
   const logout = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("userData");
-    // Refresh token cookie is HttpOnly, removed by backend on logout
+    localStorage.removeItem("checkInTime");
+    localStorage.removeItem("checkOutTime");
     setUser(null);
   };
 
-  // Function to change active admin view
   const setAdminView = (view) => {
     setActiveAdminView(view);
   };
 
-  return (
-    <AuthContext.Provider
-      value={{
-        user,
-        setUser,
-        baseurl,
-        login,
-        logout,
-        activeAdminView,
-        setActiveAdminView,
-        setAdminView,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+  const value = {
+    user,
+    login,
+    logout,
+    loading,
+    baseurl,
+    activeAdminView,
+    setAdminView,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
-  return useContext(AuthContext);
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
 }
