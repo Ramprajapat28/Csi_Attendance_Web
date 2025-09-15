@@ -98,8 +98,8 @@ const Qrcode = () => {
     const event = {
       code: decodedText,
       type: selectedType,
-      time: new Date().toISOString(),
-      ua: navigator.userAgent,
+      // time: new Date().toISOString(),
+      // ua: navigator.userAgent,
     };
 
     console.log("QR SCAN EVENT:", event, decodedResult);
