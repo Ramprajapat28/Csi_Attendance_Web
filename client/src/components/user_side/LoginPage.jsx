@@ -51,7 +51,7 @@ export const LoginPage = () => {
     <div className="flex flex-col w-full h-[100dvh]">
       <ToastContainer />
       <div className="navbar w-screen h-[110px] flex justify-center items-end p-[16px] ">
-        <img src="//logo.svg" alt="atharva logo" />
+        <img src="/logo.svg" alt="atharva logo" />
       </div>
 
       <div className="relative h-[100%] w-full px-[22px] py-[28px] inset-0 flex flex-col text-center justify-between">
