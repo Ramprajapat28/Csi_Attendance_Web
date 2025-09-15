@@ -21,7 +21,17 @@ app.set("trust proxy", 1);
 app.use(cookieParser());
 
 // Security & Performance Middleware
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrc: ["'self'"],
+      imgSrc: ["'self'", "data:", "https:"],
+    },
+  },
+  crossOriginEmbedderPolicy: false
+}));
 app.use(compression());
 
 // Morgan + Winston (log HTTP requests)

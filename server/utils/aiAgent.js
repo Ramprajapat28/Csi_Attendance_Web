@@ -1,4 +1,5 @@
 require("dotenv").config();
+
 const mongoose = require("mongoose");
 const { ChatGroq } = require("@langchain/groq");
 const { AgentExecutor, createReactAgent } = require("langchain/agents");
@@ -14,11 +15,20 @@ class AttendanceAIAgent {
 
   async initialize() {
     try {
+      // Check for required environment variables
+      if (!process.env.GROQ_API_KEY) {
+        throw new Error("GROQ_API_KEY is required for AI functionality");
+      }
+
       // Use existing mongoose connection
       if (mongoose.connection.readyState !== 1) {
         console.log("⚠️ Waiting for MongoDB connection...");
-        await new Promise((resolve) => {
-          mongoose.connection.on("connected", resolve);
+        await new Promise((resolve, reject) => {
+          const timeout = setTimeout(() => reject(new Error("MongoDB connection timeout")), 10000);
+          mongoose.connection.on("connected", () => {
+            clearTimeout(timeout);
+            resolve();
+          });
         });
       }
 
@@ -35,18 +45,16 @@ class AttendanceAIAgent {
 
       // Create prompt template
       const prompt = PromptTemplate.fromTemplate(`
-        You are an attendance analytics assistant for an organization.
-        You can ONLY access data from the requesting admin's organization.
-        
-        Available tools: {tools}
-        Tool names: {tool_names}
-        
-        Question: {input}
-        
-        Think step by step and use the attendance_analytics tool to get data.
-        
-        {agent_scratchpad}
-      `);
+You are an attendance analytics assistant for an organization.
+You can ONLY access data from the requesting admin's organization.
+Available tools: {tools}
+Tool names: {tool_names}
+
+Question: {input}
+Think step by step and use the attendance_analytics tool to get data.
+
+{agent_scratchpad}
+`);
 
       // Create agent
       const agent = await createReactAgent({
@@ -76,19 +84,21 @@ class AttendanceAIAgent {
     return [
       new DynamicTool({
         name: "attendance_analytics",
-        description: `Analyze attendance data. Supported query types: 
-        - presence_check: Check if user was present on date (needs userEmail, date)
-        - daily_summary: Get attendance summary for date (needs date)  
-        - weekly_summary: Get weekly stats (needs startDate, endDate)
-        - late_users: Find late users on date (needs date)
-        - absent_users: Find absent users on date (needs date)
-        - user_stats: Get user statistics (needs userEmail, startDate, endDate)
-        Input must be valid JSON with queryType and required fields.`,
+        description: `Analyze attendance data. Supported query types:
+- presence_check: Check if user was present on date (needs userEmail, date)
+- daily_summary: Get attendance summary for date (needs date)
+- weekly_summary: Get weekly stats (needs startDate, endDate)
+- late_users: Find late users on date (needs date)
+- absent_users: Find absent users on date (needs date)
+- user_stats: Get user statistics (needs userEmail, startDate, endDate)
+
+Input must be valid JSON with queryType and required fields.`,
         func: async (input) => {
           try {
             const params = JSON.parse(input);
             return await this.executeAnalytics(params);
           } catch (error) {
+            console.error("Tool execution error:", error);
             return `Error processing request: ${error.message}`;
           }
         },
@@ -121,6 +131,7 @@ class AttendanceAIAgent {
           return "Unknown query type. Supported: presence_check, daily_summary, weekly_summary, late_users, absent_users, user_stats";
       }
     } catch (error) {
+      console.error("Analytics execution error:", error);
       return `Database query error: ${error.message}`;
     }
   }
@@ -178,14 +189,6 @@ class AttendanceAIAgent {
 • Absent: ${absentCount} users`;
   }
 
-  async getWeeklySummary(startDate, endDate, organizationId) {
-    return `📈 Weekly summary from ${startDate} to ${endDate} - Feature coming soon for organization ${organizationId}`;
-  }
-
-  async getLateUsers(date, organizationId) {
-    return `⏰ Late users analysis for ${date} - Feature coming soon for organization ${organizationId}`;
-  }
-
   async getAbsentUsers(date, organizationId) {
     const User = mongoose.model("User");
     const Attendance = mongoose.model("Attendance");
@@ -212,7 +215,16 @@ class AttendanceAIAgent {
     absentUsers.forEach((user) => {
       result += `• ${user.name} (${user.email})\n`;
     });
+
     return result;
+  }
+
+  async getWeeklySummary(startDate, endDate, organizationId) {
+    return `📈 Weekly summary from ${startDate} to ${endDate} - Feature coming soon for organization ${organizationId}`;
+  }
+
+  async getLateUsers(date, organizationId) {
+    return `⏰ Late users analysis for ${date} - Feature coming soon for organization ${organizationId}`;
   }
 
   async getUserStats(userEmail, startDate, endDate, organizationId) {
@@ -242,7 +254,7 @@ class AttendanceAIAgent {
   }
 }
 
-// Singleton instance
+// Singleton instance with proper cleanup
 let aiAgent = null;
 
 const getAIAgent = async () => {
@@ -253,4 +265,11 @@ const getAIAgent = async () => {
   return aiAgent;
 };
 
-module.exports = { getAIAgent, AttendanceAIAgent };
+// Cleanup function for graceful shutdown
+const cleanupAIAgent = () => {
+  if (aiAgent) {
+    aiAgent = null;
+  }
+};
+
+module.exports = { getAIAgent, AttendanceAIAgent, cleanupAIAgent };
