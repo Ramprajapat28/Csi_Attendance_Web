@@ -17,7 +17,7 @@ export default function LogoTransition() {
         <AnimatePresence>
         {step === "logoOnly" && (
             <motion.img
-            src="/src/assets/react.svg"
+            src="/react.svg"
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{y: -280, opacity: 1,scale: 0.5 }}
@@ -35,7 +35,7 @@ export default function LogoTransition() {
             transition={{ duration: 1 }}
             key="logoAndText"
             >
-            <img src="/src/assets/react.svg" className="w-16 h-16 mb-2" />
+            <img src="//react.svg" className="w-16 h-16 mb-2" />
             <h1 className="text-white text-2xl font-bold">Chalo</h1>
             </motion.div>
         )} */}

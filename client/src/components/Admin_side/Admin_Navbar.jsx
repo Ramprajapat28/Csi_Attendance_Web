@@ -76,7 +76,7 @@ export const Admin_Navbar = () => {
         <a className="">
           <img
             className=" w-[231px] h-[44px]"
-            src="/src/assets/logo.svg"
+            src="/logo.svg"
             alt="Logo"
           />
         </a>
@@ -91,7 +91,7 @@ export const Admin_Navbar = () => {
               <img
                 className=" w-6 "
                 alt="Profile"
-                src="/src/assets/Profile.svg"
+                src="/profile.svg"
               />
               <p className="text-[#1D61E7]">
                 {user?.name ? `Hi, ${user.name.split(" ")[0]}` : "My Account"}
@@ -148,7 +148,7 @@ export const Admin_Navbar = () => {
               htmlFor="nav-home"
               className="peer-checked:bg-primary peer-checked:text-black rounded-[10px] p-[15px] gap-[5px] text-[16px] font-normal flex items-center cursor-pointer transition hover:bg-gray-100"
             >
-              <img src="/src/assets/Home.svg" alt="home" />
+              <img src="/Home.svg" alt="home" />
               Home
             </label>
           </li>
@@ -166,7 +166,7 @@ export const Admin_Navbar = () => {
               htmlFor="nav-employees"
               className="peer-checked:bg-primary peer-checked:text-black rounded-[10px] p-[15px] gap-[5px] text-[16px] font-normal flex items-center cursor-pointer transition hover:bg-gray-100"
             >
-              <img src="/src/assets/Employees.svg" alt="employees" />
+              <img src="/Employees.svg" alt="employees" />
               Employees
             </label>
           </li>
@@ -184,7 +184,7 @@ export const Admin_Navbar = () => {
               htmlFor="nav-records"
               className="peer-checked:bg-primary peer-checked:text-black rounded-[10px] p-[15px] gap-[5px] text-[16px] font-normal flex items-center cursor-pointer transition hover:bg-gray-100"
             >
-              <img src="/src/assets/Record.svg" alt="records" />
+              <img src="/Record.svg" alt="records" />
               Records
             </label>
           </li>
@@ -202,7 +202,7 @@ export const Admin_Navbar = () => {
               htmlFor="nav-reports"
               className="peer-checked:bg-primary peer-checked:text-black rounded-[10px] p-[15px] gap-[5px] text-[16px] font-normal flex items-center cursor-pointer transition hover:bg-gray-100"
             >
-              <img src="/src/assets/Report.svg" alt="reports" />
+              <img src="/Report.svg" alt="reports" />
               Reports
             </label>
           </li>
@@ -220,7 +220,7 @@ export const Admin_Navbar = () => {
               htmlFor="nav-qr"
               className="peer-checked:bg-primary peer-checked:text-black rounded-[10px] p-[15px] gap-[5px] text-[16px] font-normal flex items-center cursor-pointer transition hover:bg-gray-100"
             >
-              <img src="/src/assets/QR.svg" alt="qr" />
+              <img src="/QR.svg" alt="qr" />
               QR
             </label>
           </li>

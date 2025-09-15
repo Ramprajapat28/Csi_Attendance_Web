@@ -278,6 +278,7 @@ const Qrcode = () => {
   }, []);
 
   return (
+<<<<<<< HEAD
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
         <div className="text-center mb-6">
@@ -289,6 +290,59 @@ const Qrcode = () => {
               ? "Select attendance type"
               : `Scanning for ${selectedType}`}
           </p>
+=======
+    <div className="flex flex-col items-center justify-center w-screen h-[100dvh] gap-4 pt-[70px] pb-[30px]">
+      {/* Close/Back Button */}
+      <img
+        onClick={goBack}
+        src="/cross.png"
+        className="h-[12px] absolute right-[15px] top-[25px] cursor-pointer"
+        alt="Back"
+      />
+
+      {/* Title */}
+      <div className="text flex flex-col items-center justify-center gap-0.5">
+        <span className="font-bold text-lg">
+          {showTypeSelector ? "Select Attendance Type" : "Scan QR Code"}
+        </span>
+        <span className="font-medium text-gray-400 text-xs">
+          {showTypeSelector 
+            ? "Choose check-in or check-out" 
+            : `Scanning for ${selectedType}...`}
+        </span>
+      </div>
+
+      {/* Type Selection Modal */}
+      {showTypeSelector && (
+        <div className="flex flex-col gap-4 w-[350px]">
+          <button
+            onClick={() => handleTypeSelection('check-in')}
+            className="flex justify-center items-center rounded-lg text-sm font-medium gap-3 
+              bg-green-500 text-white w-full h-[48px] shadow-[0px_4px_4px_0px_#00000040] 
+              active:shadow-[0px_2px_1px_0px_#00000040] transition-all duration-100"
+          >
+            Check In
+            <img
+              src="/check.png"
+              className="h-[15px] invert"
+              alt="Check In"
+            />
+          </button>
+
+          <button
+            onClick={() => handleTypeSelection('check-out')}
+            className="flex justify-center items-center rounded-lg text-sm font-medium gap-3 
+              bg-red-500 text-white w-full h-[48px] shadow-[0px_4px_4px_0px_#00000040] 
+              active:shadow-[0px_2px_1px_0px_#00000040] transition-all duration-100"
+          >
+            Check Out
+            <img
+              src="/check.png"
+              className="h-[15px] invert"
+              alt="Check Out"
+            />
+          </button>
+>>>>>>> 7c767f35e77ef565ef3d19ee92e3d52bec47902f
         </div>
 
         {showTypeSelector ? (

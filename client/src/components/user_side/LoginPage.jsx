@@ -51,7 +51,7 @@ export const LoginPage = () => {
     <div className="flex flex-col w-full h-[100dvh]">
       <ToastContainer />
       <div className="navbar w-screen h-[110px] flex justify-center items-end p-[16px] ">
-        <img src="/src/assets/logo.svg" alt="atharva logo" />
+        <img src="//logo.svg" alt="atharva logo" />
       </div>
 
       <div className="relative h-[100%] w-full px-[22px] py-[28px] inset-0 flex flex-col text-center justify-between">
@@ -62,7 +62,7 @@ export const LoginPage = () => {
           </p>
         </h1>
 
-        <img className="h-[304px]" src="src/assets/login.svg" alt="" />
+        <img className="h-[304px]" src="/login.svg" alt="" />
 
         <form onSubmit={handleEmailLogin} className="flex flex-col gap-4">
           <input
@@ -95,7 +95,7 @@ export const LoginPage = () => {
             >
               <img
                 className="h-[25px] w-[27px] my-[2px] pt-[2px]"
-                src="src/assets/google.png"
+                src="/google.png"
                 alt="google"
               />
               {/* <p className="text-[14px] text-[#1A1C1E] font-semibold">
