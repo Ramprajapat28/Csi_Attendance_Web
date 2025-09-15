@@ -12,6 +12,9 @@ const Qrcode = () => {
   const html5QrCodeRef = useRef(null);
   const mountedRef = useRef(true);
 
+  // ADDED: guard to prevent duplicate handling
+  const processingRef = useRef(false);
+
   // UI state
   const [showTypeSelector, setShowTypeSelector] = useState(true);
   const [selectedType, setSelectedType] = useState(null);
@@ -57,11 +60,10 @@ const Qrcode = () => {
         return;
       }
 
-      const backCam = devices.find((d) =>
-        /back|rear|environment/i.test(d.label)
-      )?.id ?? {
-        facingMode: "environment",
-      };
+      const backCam =
+        devices.find((d) => /back|rear|environment/i.test(d.label))?.id ?? {
+          facingMode: "environment",
+        };
 
       const w = container.clientWidth || 320;
       const qrSize = Math.floor(Math.min(300, Math.max(180, w * 0.8)));
@@ -72,11 +74,14 @@ const Qrcode = () => {
           fps: 10,
           qrbox: { width: qrSize, height: qrSize },
         },
+        // MODIFIED: success callback with processing guard + orderly stop then POST
         async (decodedText) => {
+          if (processingRef.current) return;
+          processingRef.current = true;
           setQrDetected(true);
           setDetectedQrCode(decodedText);
           await stopScanner();
-          markAttendance(decodedText);
+          await markAttendance(decodedText);
         },
         () => {
           // ignore parse errors
@@ -156,15 +161,8 @@ const Qrcode = () => {
       const requestBody = {
         code: qrCode, // The QR code string
         type: selectedType, // 'check-in' or 'check-out'
-        location: {
-          latitude: 0,
-          longitude: 0,
-          accuracy: 0,
-        }, // Your backend uses these defaults anyway
-        deviceInfo: {
-          deviceId: `web-${Date.now()}`,
-          platform: "web",
-        }, // Optional but keeps structure
+        // location: { latitude: 0, longitude: 0, accuracy: 0 },
+        // deviceInfo: { deviceId: `web-${Date.now()}`, platform: "web" },
       };
 
       console.log("Sending request body:", requestBody); // Debug
@@ -216,17 +214,25 @@ const Qrcode = () => {
       setMessage("");
       setQrDetected(false);
       setDetectedQrCode("");
+      // ADDED: reset processing guard on back
+      processingRef.current = false;
     } else {
       navigate("/dashboard");
     }
   };
 
-  // Start scanner when type is selected and view is visible
+  // MODIFIED: prevent auto-restart after a detection/while processing
   useEffect(() => {
-    if (!showTypeSelector && selectedType && !scannerInitialized) {
+    if (
+      !showTypeSelector &&
+      selectedType &&
+      !scannerInitialized &&
+      !qrDetected &&
+      !processingRef.current
+    ) {
       requestAnimationFrame(() => startScanner());
     }
-  }, [showTypeSelector, selectedType, scannerInitialized]);
+  }, [showTypeSelector, selectedType, scannerInitialized, qrDetected]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -280,7 +286,11 @@ const Qrcode = () => {
               active:shadow-[0px_2px_1px_0px_#00000040] transition-all duration-200"
           >
             Check Out
-            <img src="/check.png" className="h-[15px] invert" alt="Check Out" />
+            <img
+              src="/check.png"
+              className="h-[15px] invert"
+              alt="Check Out"
+            />
           </button>
         </div>
       ) : (
@@ -343,6 +353,8 @@ const Qrcode = () => {
                   setMessage("");
                   setQrDetected(false);
                   setDetectedQrCode("");
+                  // ADDED: reset processing guard on retry
+                  processingRef.current = false;
                 }}
                 className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
               >
