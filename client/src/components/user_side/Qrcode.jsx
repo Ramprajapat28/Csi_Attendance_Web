@@ -152,57 +152,40 @@ const Qrcode = () => {
         return;
       }
 
-      let location = null;
-      if (navigator.geolocation) {
-        try {
-          const position = await new Promise((resolve, reject) => {
-            navigator.geolocation.getCurrentPosition(resolve, reject, {
-              timeout: 5000,
-              enableHighAccuracy: true,
-            });
-          });
-          location = {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          };
-        } catch {
-          // location optional
-        }
-      }
-
+      // This matches exactly what your backend expects
       const requestBody = {
-        code: qrCode,
-        type: selectedType,
-        location,
+        code: qrCode, // The QR code string
+        type: selectedType, // 'check-in' or 'check-out'
+        location: {
+          latitude: 0,
+          longitude: 0,
+          accuracy: 0,
+        }, // Your backend uses these defaults anyway
         deviceInfo: {
           deviceId: `web-${Date.now()}`,
           platform: "web",
-        },
+        }, // Optional but keeps structure
       };
+
+      console.log("Sending request body:", requestBody); // Debug
 
       const response = await fetch(`${baseurl}/attend/scan`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${accessToken}`, // Make sure Bearer is included
         },
         body: JSON.stringify(requestBody),
       });
 
       const data = await response.json();
+      console.log("Backend response:", data); // Debug
 
       if (response.ok) {
         const successMessage = `✅ ${
           selectedType === "check-in" ? "Check-in" : "Check-out"
         } successful!`;
         setMessage(successMessage);
-
-        const currentTime = new Date().toISOString();
-        if (selectedType === "check-in") {
-          localStorage.setItem("checkInTime", currentTime);
-        } else {
-          localStorage.setItem("checkOutTime", currentTime);
-        }
 
         setTimeout(() => {
           navigate("/animation", {
@@ -216,22 +199,12 @@ const Qrcode = () => {
       } else {
         const errorMessage = data.message || "Attendance marking failed";
         setMessage(`❌ ${errorMessage}`);
-        setTimeout(() => {
-          navigate("/Teacherinfo", {
-            state: { error: true, message: errorMessage },
-          });
-        }, 3000);
       }
     } catch (error) {
       console.error("Network error:", error);
       setMessage("❌ Network error. Please check the connection.");
-      setTimeout(() => {
-        navigate("/Teacherinfo", {
-          state: { error: true, message: "Network error" },
-        });
-      }, 3000);
     } finally {
-      if (mountedRef.current) setIsLoading(false);
+      setIsLoading(false);
     }
   };
 
