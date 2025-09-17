@@ -18,31 +18,6 @@ import "cally";
 import AdminProtected from "./components/AdminProtected";
 
 function App() {
-<<<<<<< HEAD
-    const location = useLocation();
-    return (
-        <>
-            <AnimatePresence>
-                <Routes location={location} key={location.pathname}>
-                    <Route path="/" element={<LoginPage />} />
-                    <Route path="/Teacherinfo" element={<TeacherInfo />} />
-                    <Route path="/scanQR" element={<Qrcode />} />
-                    <Route path="/" element={<TeacherInfo />} />
-                    <Route path="/Complete" element={<AnimationPage />} />
-                    <Route path="/ShowLogOut" element={<Logout />} />
-                    <Route path="/Dashboard" element={<Dashboad />} />
-                    <Route path="/" element={<LoginPage_G/>} />
-                    <Route path="/GenerateQr" element={<QRGenrator_G/>} /> 
-                </Routes>
-            </AnimatePresence>
-            {/* <EmployeeLayout /> */}
-            {/* <Admin_Navbar />
-            <AttendanceRecordLayout /> */}
-
-
-        </>
-    );
-=======
   const location = useLocation();
 
   return (
@@ -197,7 +172,6 @@ function App() {
       </AnimatePresence>
     </>
   );
->>>>>>> 76481964de108e93ae559f7336ebdf3c8f05809b
 }
 
 export default App;
