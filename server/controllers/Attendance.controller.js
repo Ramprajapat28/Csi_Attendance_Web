@@ -330,7 +330,8 @@ exports.getDailyReport = async (req, res) => {
     const startOfDay = new Date(
       reportDate.getFullYear(),
       reportDate.getMonth(),
-      reportDate.getDate()
+      reportDate.getDate(),
+      reportDate.getDay(),
     );
 
     const dailyReports = await DailyTimeSheet.find({
