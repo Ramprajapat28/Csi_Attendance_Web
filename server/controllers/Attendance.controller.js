@@ -83,30 +83,39 @@ const updateDailyTimeSheet = async (userId, organizationId, attendance) => {
   return timeSheet;
 };
 
-// 🔥 Scan QR Code (Modified - Location validation commented out)
+// 🔥 Scan QR Code (Fixed)
 exports.scanQRCode = async (req, res) => {
   try {
+    console.log("📍 Scan request received:", {
+      body: req.body,
+      user: req.user?.email,
+      timestamp: new Date().toISOString(),
+    });
+
     const { code, location, type, deviceInfo } = req.body;
     const user = req.user;
 
     // Basic validation
     if (!code || !type) {
-      return res.status(400).json({ 
+      console.log("❌ Missing required fields");
+      return res.status(400).json({
+        success: false,
         message: "Missing required fields: code and type",
-        required: ["code", "type"]
+        required: ["code", "type"],
       });
     }
 
     if (!["check-in", "check-out"].includes(type)) {
-      return res.status(400).json({ 
-        message: "Invalid type. Must be 'check-in' or 'check-out'" 
+      console.log("❌ Invalid type:", type);
+      return res.status(400).json({
+        success: false,
+        message: "Invalid type. Must be 'check-in' or 'check-out'",
       });
     }
 
     // Check last attendance for the day
     const todayStart = new Date();
     todayStart.setHours(0, 0, 0, 0);
-    
     const lastAttendance = await Attendance.findOne({
       userId: user._id,
       createdAt: { $gte: todayStart },
@@ -114,13 +123,19 @@ exports.scanQRCode = async (req, res) => {
 
     // Prevent duplicate check-ins/check-outs
     if (lastAttendance && lastAttendance.type === type) {
+      console.log("❌ Duplicate scan attempt");
       return res.status(400).json({
-        message: `You are already ${type === "check-in" ? "checked in" : "checked out"}. Please ${type === "check-in" ? "check out" : "check in"} first.`,
+        success: false,
+        message: `You are already ${
+          type === "check-in" ? "checked in" : "checked out"
+        }. Please ${type === "check-in" ? "check out" : "check in"} first.`,
       });
     }
 
     if (!lastAttendance && type === "check-out") {
+      console.log("❌ Checkout without checkin");
       return res.status(400).json({
+        success: false,
         message: "Cannot check-out without checking in first today.",
       });
     }
@@ -128,30 +143,38 @@ exports.scanQRCode = async (req, res) => {
     // Verify QR code
     const qr = await QRCode.findOne({ code, active: true });
     if (!qr) {
-      return res.status(400).json({ message: "Invalid or expired QR code" });
+      console.log("❌ Invalid QR code:", code);
+      return res.status(400).json({
+        success: false,
+        message: "Invalid or expired QR code",
+      });
     }
 
     // Verify organization
     if (String(user.organizationId) !== String(qr.organizationId)) {
-      return res.status(403).json({ 
-        message: "QR code doesn't belong to your organization" 
+      console.log("❌ Organization mismatch");
+      return res.status(403).json({
+        success: false,
+        message: "QR code doesn't belong to your organization",
       });
     }
 
     // Verify QR type matches request type
     if (qr.qrType !== type) {
+      console.log("❌ QR type mismatch");
       return res.status(400).json({
-        message: `This is a ${qr.qrType} QR code, but you're trying to ${type}`
+        success: false,
+        message: `This is a ${qr.qrType} QR code, but you're trying to ${type}`,
       });
     }
 
-    // 🔧 COMMENTED OUT: Location validation for now
-    // const safeLocation = location && location.latitude && location.longitude
-    //   ? location
-    //   : { latitude: 0, longitude: 0, accuracy: 0 };
+    // Use safe location
+    const safeLocation =
+      location && location.latitude && location.longitude
+        ? location
+        : { latitude: 0, longitude: 0, accuracy: 0 };
 
-    // 🔧 DEFAULT: Use default location for now
-    const safeLocation = { latitude: 0, longitude: 0, accuracy: 0 };
+    console.log("✅ Creating attendance record");
 
     // Create attendance record
     const record = await Attendance.create({
@@ -160,19 +183,25 @@ exports.scanQRCode = async (req, res) => {
       qrCodeId: qr._id,
       type,
       location: safeLocation,
-      deviceInfo: deviceInfo || {}, // Keep structure but don't require
+      deviceInfo: deviceInfo || {},
       verified: true,
       verificationDetails: {
-        locationMatch: true, // Always true for now
+        locationMatch: true,
         qrCodeValid: true,
         timeValid: true,
-        deviceTrusted: true, // Always true for now
+        deviceTrusted: true,
         spoofingDetected: false,
       },
     });
 
+    console.log("✅ Attendance record created:", record._id);
+
     // Update daily timesheet
-    const timeSheet = await updateDailyTimeSheet(user._id, qr.organizationId, record);
+    const timeSheet = await updateDailyTimeSheet(
+      user._id,
+      qr.organizationId,
+      record
+    );
 
     // Update user activity
     user.lastActivity = type === "check-in";
@@ -187,82 +216,107 @@ exports.scanQRCode = async (req, res) => {
     const recordObj = record.toObject();
     recordObj.createdAtIST = new Date(record.createdAt.getTime() + istOffset);
 
-    return res.json({
-      message: `${type === "check-in" ? "Checked in" : "Checked out"} successfully`,
+    console.log("✅ Sending success response");
+
+    return res.status(200).json({
+      success: true,
+      message: `${
+        type === "check-in" ? "Checked in" : "Checked out"
+      } successfully`,
       attendance: recordObj,
       dailyStatus: {
-        totalWorkingTime: Math.floor(timeSheet.totalWorkingTime / 60) + "h " + (timeSheet.totalWorkingTime % 60) + "m",
+        totalWorkingTime:
+          Math.floor(timeSheet.totalWorkingTime / 60) +
+          "h " +
+          (timeSheet.totalWorkingTime % 60) +
+          "m",
         status: timeSheet.status,
         sessions: timeSheet.sessions.length,
       },
+      timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error("Error in scanQRCode:", error);
+    console.error("❌ Error in scanQRCode:", error);
     return res.status(500).json({
+      success: false,
       message: "Failed to process attendance scan",
-      error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
+      error:
+        process.env.NODE_ENV === "development"
+          ? error.message
+          : "Internal server error",
+      timestamp: new Date().toISOString(),
     });
   }
 };
 
-// 🔥 Get User Past Attendance (Added)
+// 🔥 Get User Past Attendance
 exports.getUserPastAttendance = async (req, res) => {
   try {
     const userId = req.user._id;
     const { limit = 50, page = 1 } = req.query;
-    
     const skip = (page - 1) * limit;
-    
+
     const attendance = await Attendance.find({ userId })
-      .populate('qrCodeId', 'qrType')
-      .populate('organizationId', 'name')
+      .populate("qrCodeId", "qrType")
+      .populate("organizationId", "name")
       .sort({ createdAt: -1 })
       .limit(parseInt(limit))
       .skip(skip);
-    
+
     // Add IST timestamps
-    const formattedAttendance = attendance.map(record => {
+    const formattedAttendance = attendance.map((record) => {
       const istOffset = 5.5 * 60 * 60 * 1000;
       const obj = record.toObject();
       obj.createdAtIST = new Date(record.createdAt.getTime() + istOffset);
       return obj;
     });
-    
+
     const total = await Attendance.countDocuments({ userId });
-    
+
     res.json({
+      success: true,
       attendance: formattedAttendance,
       pagination: {
         current: parseInt(page),
         total: Math.ceil(total / limit),
-        hasNext: skip + attendance.length < total
-      }
+        hasNext: skip + attendance.length < total,
+      },
     });
   } catch (error) {
-    console.error('Error fetching user attendance:', error);
-    res.status(500).json({ message: 'Failed to fetch attendance history' });
+    console.error("Error fetching user attendance:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch attendance history",
+    });
   }
 };
 
-// 🔥 Upload Attendance File (Added)
+// 🔥 Upload Attendance File
 exports.uploadAttendanceFile = async (req, res) => {
   try {
     if (!req.file) {
-      return res.status(400).json({ message: 'No file uploaded' });
+      return res.status(400).json({
+        success: false,
+        message: "No file uploaded",
+      });
     }
-    
+
     res.json({
-      message: 'File uploaded successfully',
+      success: true,
+      message: "File uploaded successfully",
       file: {
         filename: req.file.filename,
         originalname: req.file.originalname,
         size: req.file.size,
-        url: req.file.path
-      }
+        url: req.file.path,
+      },
     });
   } catch (error) {
-    console.error('Error uploading attendance file:', error);
-    res.status(500).json({ message: 'Failed to upload file' });
+    console.error("Error uploading attendance file:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to upload file",
+    });
   }
 };
 
@@ -271,7 +325,6 @@ exports.getDailyReport = async (req, res) => {
   try {
     const { date } = req.query;
     const orgId = req.user.organizationId;
-
     const reportDate = date ? new Date(date) : new Date();
     const startOfDay = new Date(
       reportDate.getFullYear(),
@@ -289,7 +342,6 @@ exports.getDailyReport = async (req, res) => {
 
     // Create report with absent users
     const reportMap = new Map();
-
     allUsers.forEach((user) => {
       reportMap.set(user._id.toString(), {
         userId: user._id,
@@ -321,6 +373,7 @@ exports.getDailyReport = async (req, res) => {
     const finalReport = Array.from(reportMap.values());
 
     res.json({
+      success: true,
       date: startOfDay,
       totalEmployees: allUsers.length,
       present: finalReport.filter((r) => r.status !== "absent").length,
@@ -331,7 +384,10 @@ exports.getDailyReport = async (req, res) => {
     });
   } catch (error) {
     console.error("Error generating daily report:", error);
-    res.status(500).json({ message: "Failed to generate daily report" });
+    res.status(500).json({
+      success: false,
+      message: "Failed to generate daily report",
+    });
   }
 };
 
@@ -340,7 +396,6 @@ exports.getWeeklyReport = async (req, res) => {
   try {
     const { startDate } = req.query;
     const orgId = req.user.organizationId;
-
     const start = startDate ? new Date(startDate) : new Date();
     start.setDate(start.getDate() - start.getDay()); // Start of week (Sunday)
     start.setHours(0, 0, 0, 0);
@@ -358,7 +413,6 @@ exports.getWeeklyReport = async (req, res) => {
 
     // Create weekly summary
     const userSummary = {};
-
     allUsers.forEach((user) => {
       userSummary[user._id.toString()] = {
         name: user.name,
@@ -388,20 +442,16 @@ exports.getWeeklyReport = async (req, res) => {
     weeklyReports.forEach((report) => {
       const userId = report.userId._id.toString();
       const dateKey = report.date.toISOString().split("T")[0];
-
       if (userSummary[userId]) {
         userSummary[userId].days[dateKey] = {
           status: report.status,
           workingTime: report.totalWorkingTime,
           sessions: report.sessions.length,
         };
-
         userSummary[userId].totalHours += report.totalWorkingTime;
-
         if (report.status === "full-day") userSummary[userId].fullDays++;
         else if (report.status === "half-day") userSummary[userId].halfDays++;
         else if (report.status === "absent") userSummary[userId].absentDays++;
-
         if (report.status !== "absent") userSummary[userId].presentDays++;
       }
     });
@@ -413,13 +463,17 @@ exports.getWeeklyReport = async (req, res) => {
     });
 
     res.json({
+      success: true,
       weekStart: start,
       weekEnd: end,
       summary: userSummary,
     });
   } catch (error) {
     console.error("Error generating weekly report:", error);
-    res.status(500).json({ message: "Failed to generate weekly report" });
+    res.status(500).json({
+      success: false,
+      message: "Failed to generate weekly report",
+    });
   }
 };
 

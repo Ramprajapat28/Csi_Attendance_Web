@@ -17,7 +17,14 @@ export const LoginPage = () => {
       const res = await axios.post(
         `${baseurl}/auth2/login`,
         { email, password },
-        { withCredentials: true }
+        {
+          withCredentials: true,
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          timeout: 10000, // Add timeout
+        }
       );
       if (res.data.accessToken) {
         login(res.data.user, res.data.accessToken);
@@ -31,12 +38,12 @@ export const LoginPage = () => {
 
   const handleGoogleLogin = () => {
     // Placeholder for Google login logic
-      const login = (userData, accessToken) => {
-    setUser(userData);
-    localStorage.setItem("accessToken", accessToken);
-    localStorage.setItem("userData", JSON.stringify(userData));
-    console.log(userData);
-  };
+    const login = (userData, accessToken) => {
+      setUser(userData);
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("userData", JSON.stringify(userData));
+      console.log(userData);
+    };
     navigate("/Teacherinfo");
   };
 
@@ -44,7 +51,7 @@ export const LoginPage = () => {
     <div className="flex flex-col w-full h-[100dvh]">
       <ToastContainer />
       <div className="navbar w-screen h-[110px] flex justify-center items-end p-[16px] ">
-        <img src="/src/assets/logo.svg" alt="atharva logo" />
+        <img src="/logo.svg" alt="atharva logo" />
       </div>
 
       <div className="relative h-[100%] w-full px-[22px] py-[28px] inset-0 flex flex-col text-center justify-between">
@@ -55,7 +62,7 @@ export const LoginPage = () => {
           </p>
         </h1>
 
-        <img className="h-[304px]" src="src/assets/login.svg" alt="" />
+        <img className="h-[304px]" src="/login.svg" alt="" />
 
         <form onSubmit={handleEmailLogin} className="flex flex-col gap-4">
           <input
@@ -77,16 +84,18 @@ export const LoginPage = () => {
           <div className="w-full flex gap-2">
             <button
               type="submit"
-              className="flex justify-center items-center rounded-lg font-medium gap-3 bg-[#1D61E7] text-white w-full h-[48px] shadow-[0px_4px_4px_0px_#00000040] active:shadow-[0px_2px_1px_0px_#00000040] transition-all duration-100">
+              className="flex justify-center items-center rounded-lg font-medium gap-3 bg-[#1D61E7] text-white w-full h-[48px] shadow-[0px_4px_4px_0px_#00000040] active:shadow-[0px_2px_1px_0px_#00000040] transition-all duration-100"
+            >
               Login
             </button>
 
             <button
               onClick={handleGoogleLogin}
-              className="flex justify-center items-center gap-[10px] border border-[#EFF0F6] rounded-[100px] w-[48px]  h-[48px] shadow-[0px_4px_4px_0px_#00000040] active:shadow-[0px_2px_1px_0px_#00000040] transition-all duration-100">
+              className="flex justify-center items-center gap-[10px] border border-[#EFF0F6] rounded-[100px] w-[48px]  h-[48px] shadow-[0px_4px_4px_0px_#00000040] active:shadow-[0px_2px_1px_0px_#00000040] transition-all duration-100"
+            >
               <img
                 className="h-[25px] w-[27px] my-[2px] pt-[2px]"
-                src="src/assets/google.png"
+                src="/google.png"
                 alt="google"
               />
               {/* <p className="text-[14px] text-[#1A1C1E] font-semibold">

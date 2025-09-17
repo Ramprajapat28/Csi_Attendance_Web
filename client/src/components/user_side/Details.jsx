@@ -5,7 +5,7 @@ const Details = () => {
     <div>
         <div className="markedD flex flex-col items-center">
         <div className="marked flex flex-col justify-center items-center h-[254px] w-[350px] gap-[10px]">
-        <img className='h-[98px] w-[95px]' src="/src/assets/Checkmark.png" alt="" />
+        <img className='h-[98px] w-[95px]' src="/Checkmark.png" alt="" />
         <div className="text flex flex-col justify-center items-center">
             <span className='font-semibold text-[24px]'>Attendance Marked</span>
             <span className='text-gray-400'>Your entry has been marked</span>

@@ -1,17 +1,17 @@
 const rateLimit = require("express-rate-limit");
-const { ipKeyGenerator } = require("express-rate-limit"); // ✅ import helper
+const { ipKeyGenerator } = require("express-rate-limit");
 
-// Limit: 1 request per 10 seconds per user
+// More reasonable limit for production: 1 request per 3 seconds
 const qrRateLimiter = rateLimit({
-  windowMs: 10 * 1000, // 10 sec
+  windowMs: 3 * 1000, // 3 seconds
   max: 1,
   keyGenerator: (req, res) => {
-    // ✅ Use user ID if logged in, fallback safely to IP (IPv4 + IPv6)
     return req.user ? req.user._id.toString() : ipKeyGenerator(req);
   },
   message: {
     success: false,
-    message: "Too many scans! Please wait before scanning again."
+    message: "Too many scans! Please wait before scanning again.",
+    retryAfter: 3,
   },
   standardHeaders: true,
   legacyHeaders: false,

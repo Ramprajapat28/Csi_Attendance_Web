@@ -17,12 +17,12 @@ const Logout = () => {
         <div className="teacher-info h-[613px] w-[353px] bg-white flex flex-col justify-center items-center rounded-3xl">
             <img
         onClick={cancel}
-        src="/src/assets/cross.png"
+        src="/cross.png"
         className="h-[12px] cursor-pointer relative left-[150px]"
         alt="Cancel"
         />
             <div className="avatar flex flex-col justify-center items-center h-[210px] w-[156px] m-[150px]">
-                <img src="/src/assets/Avatar.png" alt="avatar" className='h-[182px] w-[182px]'/>
+                <img src="/Avatar.png" alt="avatar" className='h-[182px] w-[182px]'/>
                 <span className='font-medium text-[24px]'>{user?.name}</span>
                 <span className='text-gray-600 text-[16px]'>Teacher, EXTC dept.</span>
             </div>
