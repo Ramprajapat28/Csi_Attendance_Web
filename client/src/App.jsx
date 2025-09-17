@@ -3,7 +3,7 @@ import TeacherInfo from "./components/user_side/TeacherInfo";
 import { motion, AnimatePresence } from "framer-motion";
 import AnimationPage from "./components/user_side/AnimationPage";
 import React, { useEffect, useRef, useState } from "react";
-import Qrcode from "./components/user_side/Qrcode";
+import NewQrcode from "./components/user_side/Newqrcode";
 import { Route, Routes, useLocation, Navigate } from "react-router-dom";
 import Logout from "./components/user_side/LogoutPage";
 import Dashboad from "./components/user_side/Dashboad";
@@ -93,7 +93,7 @@ function App() {
                   exit={{ opacity: 0, scale: 0.8 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <Qrcode />
+                  <NewQrcode/>
                 </motion.div>
               </ProtectedRoute>
             }
