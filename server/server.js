@@ -5,9 +5,32 @@ const customCors = require("./config/cors");
 const ScheduleAttendanceCheck = require("./utils/timeRefresher");
 const compression = require('compression');
 const helmet = require("helmet");
+const morgan = require('morgan'); 
+const logger = require('./utils/logger'); 
+const bulkUserRoutes = require("./routes/bulkUser.routes");
+
+
+// const mongoSanitize = require('express-mongo-sanitize');
 const app = express();
 app.use(helmet());
 app.use(compression());
+// app.use(mongoSanitize({ replaceWith: '_removed' }));
+
+// Morgan + Winston (log HTTP requests)
+app.use(morgan('tiny', {
+  stream: {
+    write: (message) => logger.http(message.trim())
+  }
+}));
+
+
+
+// Error handler
+app.use((err, req, res, next) => {
+  logger.error(`Unhandled error: ${err.message}`, { stack: err.stack });
+  res.status(500).json({ error: 'Something went wrong!' });
+});
+
 
 
 // 🔥 NEW: Global error handling
@@ -47,6 +70,7 @@ app.use("/qrcode", qrcodeRoutes);
 app.use("/attend", attendanceRoutes);
 app.use("/admin", adminRoutes);
 app.use("/password", passwordResetRoutes);
+app.use("/bulk", bulkUserRoutes);
 
 // Health check endpoint
 app.get("/", (req, res) => {
