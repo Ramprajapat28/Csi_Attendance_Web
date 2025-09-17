@@ -23,7 +23,8 @@ const updateDailyTimeSheet = async (userId, organizationId, attendance) => {
   const startOfDay = new Date(
     todayIST.getFullYear(),
     todayIST.getMonth(),
-    todayIST.getDate()
+    todayIST.getDate(),
+    todayIST.getDay()
   );
 
   let timeSheet = await DailyTimeSheet.findOne({
