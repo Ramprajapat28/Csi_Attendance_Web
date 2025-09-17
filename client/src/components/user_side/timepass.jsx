@@ -13,7 +13,7 @@ const timepass = () => {
             animate={{ top: "80px", left: "50%", x: "-50%", y: "0%", scale:1.4 }}
             transition={{ duration: 1.5 }}
             >
-              <img src="/src/assets/Checkmark.png" alt="" />
+              <img src="/Checkmark.png" alt="" />
               <div className='font-semibold text-[16px] w-[350px] absolute left-[-25px] top-[88px]'>Attendance Marked</div>
             </motion.div>
             <motion.div

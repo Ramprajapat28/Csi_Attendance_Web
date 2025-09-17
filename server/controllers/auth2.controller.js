@@ -113,7 +113,7 @@ const register_orginization = async (req, res) => {
 
 const register_user = async (req, res) => {
   try {
-    const { email,  name, organizationCode,institute,department  } = req.body;
+    const { email,  name, organizationCode,institute,department,password  } = req.body;
     if (!email || !organizationCode || !name || !institute || !department) {
       return res.status(400).json({ message: "All fields are required" });
     }
@@ -130,7 +130,7 @@ const register_user = async (req, res) => {
 
      const user = new User({
       email,
-      password: "TEMP_PASS",
+      password,
       name,
       role: "user",
      institute,
